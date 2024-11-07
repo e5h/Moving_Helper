@@ -1,2 +1,4 @@
 *.bkp
 **/.idea
+**/obj/
+**/bin/
