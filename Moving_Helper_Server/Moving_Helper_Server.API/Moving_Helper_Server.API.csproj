@@ -27,4 +27,8 @@
       <Folder Include="Common\Logging\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Moving_Helper_Server.SharedLibrary\Moving_Helper_Server.SharedLibrary.csproj" />
+    </ItemGroup>
+
 </Project>
