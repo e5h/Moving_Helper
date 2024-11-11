@@ -17,6 +17,7 @@ public static class LocationMapping
         {
             Id = infoDto.Id,
             Name = infoDto.Name,
+            Description = infoDto.Description,
             PictureId = infoDto.PictureId
         };
     }
@@ -27,6 +28,7 @@ public static class LocationMapping
         (
             locationEntity.Id,
             locationEntity.Name,
+            locationEntity.Description,
             locationEntity.PictureId
         );
     }

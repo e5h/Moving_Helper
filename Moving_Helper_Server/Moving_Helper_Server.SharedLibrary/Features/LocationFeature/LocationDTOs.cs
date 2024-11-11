@@ -11,6 +11,7 @@ public record LocationCreateDto(
 public record LocationInfoDto(
     [Required] int    Id,
     [Required] string Name,
+    [Required] string Description,
     [Required] int    PictureId
 );
 

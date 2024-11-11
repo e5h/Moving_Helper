@@ -11,6 +11,7 @@ public record BoxCreateDto(
 public record BoxInfoDto(
     [Required] int    Id,
     [Required] string Label,
+    [Required] string Description,
     [Required] int    LocationId,
     [Required] int    MoveFromId,
     [Required] int    MoveToId,

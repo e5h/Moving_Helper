@@ -9,9 +9,9 @@ namespace Moving_Helper_Server.SharedLibrary.Features.LocationFeature;
 /// </summary>
 public class Location
 {
-    public                                     int      Id          { get; set; }
-    [Required] [MaxLength(50)] public required string   Name        { get; set; }
-    [MaxLength(512)]           public          string?  Description { get; set; }
-    public                                     Picture? Picture     { get; set; }
-    public                                     int      PictureId   { get; set; }
+    public                                      int      Id          { get; set; }
+    [Required] [MaxLength(50)]  public required string   Name        { get; set; }
+    [Required] [MaxLength(512)] public required string   Description { get; set; }
+    public                                      Picture? Picture     { get; set; }
+    public                                      int      PictureId   { get; set; }
 }

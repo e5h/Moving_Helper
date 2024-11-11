@@ -19,6 +19,7 @@ public static class ItemMapping
         {
             Id   = infoDto.Id,
             Name = infoDto.Name,
+            Description = infoDto.Description,
             BoxId = infoDto.BoxId,
             PictureId = infoDto.PictureId
         };
@@ -30,6 +31,7 @@ public static class ItemMapping
         (
             itemEntity.Id,
             itemEntity.Name,
+            itemEntity.Description,
             itemEntity.BoxId,
             itemEntity.PictureId
         );
@@ -41,7 +43,7 @@ public static class ItemMapping
         (
             itemEntity.Id,
             itemEntity.Name,
-            itemEntity.Description ?? "",
+            itemEntity.Description,
             itemEntity.BoxId,
             itemEntity.Box.Label,
             itemEntity.Box.LocationId,

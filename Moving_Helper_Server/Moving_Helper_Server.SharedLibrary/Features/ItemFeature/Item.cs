@@ -9,11 +9,11 @@ namespace Moving_Helper_Server.SharedLibrary.Features.ItemFeature;
 /// </summary>
 public class Item
 {
-    public                                     int      Id          { get; set; }
-    [Required] [MaxLength(50)] public required string   Name        { get; set; }
-    [MaxLength(512)]           public          string?  Description { get; set; }
-    [Required]                 public          Box      Box         { get; set; }
-    public                                     int      BoxId       { get; set; }
-    public                                     Picture? Picture     { get; set; }
-    public                                     int      PictureId   { get; set; }
+    public                                      int      Id          { get; set; }
+    [Required] [MaxLength(50)]  public required string   Name        { get; set; }
+    [Required] [MaxLength(512)] public required string   Description { get; set; }
+    [Required]                  public          Box      Box         { get; set; }
+    public                                      int      BoxId       { get; set; }
+    public                                      Picture? Picture     { get; set; }
+    public                                      int      PictureId   { get; set; }
 }

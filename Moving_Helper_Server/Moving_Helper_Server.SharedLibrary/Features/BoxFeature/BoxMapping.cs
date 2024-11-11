@@ -18,6 +18,7 @@ public static class BoxMapping
         {
             Id = infoDto.Id,
             Label = infoDto.Label,
+            Description = infoDto.Description,
             LocationId = infoDto.LocationId,
             MoveFromId = infoDto.MoveFromId,
             MoveToId = infoDto.MoveToId,
@@ -31,6 +32,7 @@ public static class BoxMapping
         (
             boxEntity.Id,
             boxEntity.Label,
+            boxEntity.Description,
             boxEntity.LocationId,
             boxEntity.MoveFromId,
             boxEntity.MoveToId,
@@ -44,7 +46,7 @@ public static class BoxMapping
         (
             boxEntity.Id,
             boxEntity.Label,
-            boxEntity.Description ?? "",
+            boxEntity.Description,
             itemIds,
             boxEntity.LocationId,
             boxEntity.Location.Name,
