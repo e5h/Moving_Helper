@@ -82,13 +82,38 @@ public static class PictureEndpoints
         .WithName(PICTURE_DOWNLOAD);
 
         // POST - "uploads" a picture.
-        routeGroup.MapPost("/upload", async (IPictureService pictureService, PictureUploadDto uploadDto) =>
+        routeGroup.MapPost("/upload", async (IPictureService pictureService, HttpRequest request) =>
         {
+            if (!request.HasFormContentType || request.Form.Files.Count == 0)
+            {
+                return Results.BadRequest("No image file uploaded.");
+            }
+            
+            var formFile    = request.Form.Files[0];
+            var fileName    = request.Form["Filename"].ToString();
+            var description = request.Form["Description"].ToString();
+            
+            if (string.IsNullOrEmpty(fileName) || string.IsNullOrEmpty(description))
+            {
+                return Results.BadRequest("Filename and Description are required.");
+            }
+            
+            var    createDto = new PictureCreateDto(fileName, description);
+            byte[] pictureData;
+            
+            using (var stream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(stream);
+                pictureData = stream.ToArray();
+            }
+
+            var uploadDto = new PictureUploadDto(createDto, pictureData);
+            
             var pictureInfo = await pictureService.UploadPictureAsync(uploadDto);
 
             if (pictureInfo == null)
             {
-                return Results.BadRequest();
+                return Results.BadRequest("Could not upload the file.");
             }
 
             return Results.Ok(pictureInfo);

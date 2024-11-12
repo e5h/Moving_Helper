@@ -4,3 +4,5 @@
 **/bin/
 **/Database/Migrations/
 *.db
+*.db-shm
+*.db-wal

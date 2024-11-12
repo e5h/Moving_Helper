@@ -51,6 +51,6 @@ await app.MigrateDatabaseAsync();
 app.MapLocationEndpoints();
 app.MapBoxEndpoints();
 app.MapItemEndpoints();
-// TODO: Implement picture endpoints
+app.MapPictureEndpoints();
 
 app.Run();

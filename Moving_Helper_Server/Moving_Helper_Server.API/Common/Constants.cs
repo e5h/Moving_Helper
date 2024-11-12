@@ -2,10 +2,9 @@
 
 public static class Constants
 {
-    public const string PICTURES_RELATIVE_PATH = "/data/pictures";
-
     public static string PicturesPath()
     {
-        return Path.Combine(AppContext.BaseDirectory, PICTURES_RELATIVE_PATH);
+        var picturesPath = Path.Combine("data", "pictures");
+        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, picturesPath);
     }
 }
