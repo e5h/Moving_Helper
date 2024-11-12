@@ -4,7 +4,7 @@ namespace Moving_Helper_Server.API.Features.LocationFeature;
 
 public static class LocationEndpoints
 {
-    public const string LOCATION_ENDPOINT_HANDLE = "/api/v1/location";
+    public const string LOCATION_ENDPOINT_HANDLE = "/api/v1/locations";
     public const string LOCATION_GET_ALL_INFO    = "GetAllLocationInfo";
     public const string LOCATION_GET_ALL_DETAILS = "GetAllLocationDetails";
     public const string LOCATION_GET_INFO        = "GetLocationInfo";

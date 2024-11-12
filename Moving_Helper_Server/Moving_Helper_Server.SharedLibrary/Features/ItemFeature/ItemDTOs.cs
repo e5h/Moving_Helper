@@ -31,3 +31,8 @@ public record ItemDetailsDto(
     [Required] string MoveToName,
     [Required] int PictureId
 );
+
+public record ItemMoveDto(
+    [Required] int ItemId,
+    [Required] int NewBoxId
+);

@@ -96,22 +96,22 @@ public class ItemService(MovingHelperDbContext dbContext) : IItemService
         return itemEntity.ToInfoDto();
     }
 
-    public async Task<ItemInfoDto?> MoveItemBoxAsync(int id, int newBoxId)
+    public async Task<ItemInfoDto?> MoveItemBoxAsync(ItemMoveDto moveDto)
     {
-        var itemEntity = await dbContext.Items.FindAsync(id);
+        var itemEntity = await dbContext.Items.FindAsync(moveDto.ItemId);
 
         if (itemEntity == null)
         {
             return null;
         }
 
-        if (!await dbContext.Boxes.AnyAsync(b => b.Id == newBoxId))
+        if (!await dbContext.Boxes.AnyAsync(b => b.Id == moveDto.NewBoxId))
         {
             throw new ArgumentException("New box is invalid");
         }
 
         var moddedItem = itemEntity;
-        moddedItem.BoxId = newBoxId;
+        moddedItem.BoxId = moveDto.NewBoxId;
 
         dbContext.Items.Entry(itemEntity).CurrentValues.SetValues(moddedItem);
         await dbContext.SaveChangesAsync();

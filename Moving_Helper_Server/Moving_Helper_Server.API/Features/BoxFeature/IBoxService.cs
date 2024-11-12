@@ -11,6 +11,6 @@ public interface IBoxService
     Task<List<BoxDetailsDto>?> GetBoxDetailsMatchingStringAsync(string searchString);
     Task<List<int>?>           GetBoxAllItemIdsAsync(int id);
     Task<BoxInfoDto>           CreateBoxAsync(BoxCreateDto createDto);
-    Task<BoxInfoDto?>          MoveBoxLocationAsync(int id, int newLocationId);
+    Task<BoxInfoDto?>          MoveBoxLocationAsync(BoxMoveDto moveDto);
     Task<bool>                 DeleteBoxAsync(int id);
 }

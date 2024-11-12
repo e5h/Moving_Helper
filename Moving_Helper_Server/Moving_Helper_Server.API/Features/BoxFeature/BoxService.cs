@@ -112,22 +112,22 @@ public class BoxService(MovingHelperDbContext dbContext) : IBoxService
         return boxEntity.ToInfoDto();
     }
 
-    public async Task<BoxInfoDto?> MoveBoxLocationAsync(int id, int newLocationId)
+    public async Task<BoxInfoDto?> MoveBoxLocationAsync(BoxMoveDto moveDto)
     {
-        var boxEntity = await dbContext.Boxes.FindAsync(id);
+        var boxEntity = await dbContext.Boxes.FindAsync(moveDto.BoxId);
 
         if (boxEntity == null)
         {
             return null;
         }
 
-        if (!await dbContext.Locations.AnyAsync(l => l.Id == newLocationId))
+        if (!await dbContext.Locations.AnyAsync(l => l.Id == moveDto.NewLocationId))
         {
             throw new ArgumentException("New location is invalid.");
         }
 
         var moddedBox = boxEntity;
-        moddedBox.LocationId = newLocationId;
+        moddedBox.LocationId = moveDto.NewLocationId;
         
         dbContext.Boxes.Entry(boxEntity).CurrentValues.SetValues(moddedBox);
         await dbContext.SaveChangesAsync();

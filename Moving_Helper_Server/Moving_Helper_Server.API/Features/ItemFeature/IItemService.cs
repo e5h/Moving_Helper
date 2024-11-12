@@ -10,6 +10,6 @@ public interface IItemService
     Task<ItemDetailsDto?>       GetItemDetailsAsync(int id);
     Task<List<ItemDetailsDto>?> GetItemDetailsMatchingStringAsync(string searchString);
     Task<ItemInfoDto>           CreateItemAsync(ItemCreateDto createDto);
-    Task<ItemInfoDto?>          MoveItemBoxAsync(int id, int newBoxId);
+    Task<ItemInfoDto?>          MoveItemBoxAsync(ItemMoveDto moveDto);
     Task<bool>                  DeleteItemAsync(int id);
 }
