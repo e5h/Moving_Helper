@@ -80,16 +80,43 @@ public class MovingHelperDbContext(
         
         // SEED DATA
         
-        // modelBuilder.Entity<Picture>()
-        //     .HasData();
-        //
-        // modelBuilder.Entity<Location>()
-        //     .HasData();
-        //
-        // modelBuilder.Entity<Box>()
-        //     .HasData();
-        //
-        // modelBuilder.Entity<Item>()
-        //     .HasData();
+        modelBuilder.Entity<Picture>()
+            .HasData(new Picture
+            {
+                Id = 1,
+                Path = "/data/pictures/no_img.jpg",
+                Description = "Default value, no assigned picture."
+            });
+        
+        modelBuilder.Entity<Location>()
+            .HasData(new Location
+            {
+                Id = 1,
+                Name = "No location",
+                Description = "Default value, no assigned location.",
+                PictureId = 1
+            });
+        
+        modelBuilder.Entity<Box>()
+            .HasData(new Box
+            {
+                Id = 1,
+                Label = "No box",
+                Description = "Default value, no assigned box.",
+                LocationId = 1,
+                MoveFromId = 1,
+                MoveToId = 1,
+                PictureId = 1
+            });
+        
+        modelBuilder.Entity<Item>()
+            .HasData(new Item
+            {
+                Id = 1,
+                Name = "No item",
+                Description = "Default value, no assigned item.",
+                BoxId = 1,
+                PictureId = 1
+            });
     }
 }

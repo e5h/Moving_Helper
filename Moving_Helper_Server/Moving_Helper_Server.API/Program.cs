@@ -12,10 +12,10 @@ var dbConnString = builder.Configuration.GetConnectionString("MovingHelperDb");
 builder.Services.AddSqlite<MovingHelperDbContext>(dbConnString);
 
 // Add all feature services
-builder.Services.AddScoped<ItemService>();
-builder.Services.AddScoped<BoxService>();
-builder.Services.AddScoped<LocationService>();
-builder.Services.AddScoped<PictureService>();
+builder.Services.AddScoped<IItemService, ItemService>();
+builder.Services.AddScoped<IBoxService, BoxService>();
+builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<IPictureService, PictureService>();
 
 // Add API utilities to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

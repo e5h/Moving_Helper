@@ -25,8 +25,15 @@
 
     <ItemGroup>
       <Folder Include="Common\Logging\" />
+      <Folder Include="data\pictures\" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="data/pictures/no_img.jpg">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+    
     <ItemGroup>
       <ProjectReference Include="..\Moving_Helper_Server.SharedLibrary\Moving_Helper_Server.SharedLibrary.csproj" />
     </ItemGroup>

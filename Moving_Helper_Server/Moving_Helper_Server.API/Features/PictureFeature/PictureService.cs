@@ -1,6 +1,8 @@
-﻿namespace Moving_Helper_Server.API.Features.PictureFeature;
+﻿using Moving_Helper_Server.API.Database;
 
-public class PictureService
+namespace Moving_Helper_Server.API.Features.PictureFeature;
+
+public class PictureService(MovingHelperDbContext dbContext) : IPictureService
 {
-    
+    // TODO: Implement the picture endpoints and an image delivery method
 }
