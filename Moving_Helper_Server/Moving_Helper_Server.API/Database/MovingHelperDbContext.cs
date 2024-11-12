@@ -80,16 +80,16 @@ public class MovingHelperDbContext(
         
         // SEED DATA
         
-        modelBuilder.Entity<Picture>()
-            .HasData();
-        
-        modelBuilder.Entity<Location>()
-            .HasData();
-        
-        modelBuilder.Entity<Box>()
-            .HasData();
-        
-        modelBuilder.Entity<Item>()
-            .HasData();
+        // modelBuilder.Entity<Picture>()
+        //     .HasData();
+        //
+        // modelBuilder.Entity<Location>()
+        //     .HasData();
+        //
+        // modelBuilder.Entity<Box>()
+        //     .HasData();
+        //
+        // modelBuilder.Entity<Item>()
+        //     .HasData();
     }
 }
