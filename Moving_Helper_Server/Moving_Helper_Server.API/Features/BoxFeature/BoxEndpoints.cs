@@ -15,10 +15,16 @@ public static class BoxEndpoints
     public const string BOX_MOVE_LOCATION   = "MoveBoxLocation";
     public const string BOX_DELETE          = "DeleteBox";
 
+    /// <summary>
+    /// Maps all endpoints specified in the box service interface.
+    /// </summary>
+    /// <param name="app">The built web application object.</param>
+    /// <returns>The route group with all endpoints.</returns>
     public static RouteGroupBuilder MapBoxEndpoints(this WebApplication app)
     {
         var routeGroup = app.MapGroup(BOX_ENDPOINT_HANDLE);
 
+        // GET - get information DTOs for all boxes in the database.
         routeGroup.MapGet("/info", async (IBoxService boxService) =>
         {
             var allBoxInfo = await boxService.GetAllBoxInfoAsync();
@@ -29,6 +35,7 @@ public static class BoxEndpoints
         .WithOpenApi()
         .WithName(BOX_GET_ALL_INFO);
         
+        // GET - get detail DTOs for all boxes in the database.
         routeGroup.MapGet("/details", async (IBoxService boxService) =>
         {
             var allBoxDetails = await boxService.GetAllBoxDetailsAsync();
@@ -39,6 +46,7 @@ public static class BoxEndpoints
         .WithOpenApi()
         .WithName(BOX_GET_ALL_DETAILS);
         
+        // GET - get an information DTO for the specified box.
         routeGroup.MapGet("/info/{id}", async (IBoxService boxService, int id) =>
         {
             var locationInfo = await boxService.GetBoxInfoAsync(id);
@@ -54,6 +62,7 @@ public static class BoxEndpoints
         .WithOpenApi()
         .WithName(BOX_GET_INFO);
         
+        // GET - get a details DTO for the specified box.
         routeGroup.MapGet("/details/{id}", async (IBoxService boxService, int id) =>
         {
             var locationDetails = await boxService.GetBoxDetailsAsync(id);
@@ -69,6 +78,7 @@ public static class BoxEndpoints
         .WithOpenApi()
         .WithName(BOX_GET_DETAILS);
         
+        // GET - get detail DTOs for all boxes matching the specified search term.
         routeGroup.MapGet("/search", async (IBoxService boxService, string searchTerm) =>
         {
             var matchingBoxDetails = await boxService.GetBoxDetailsMatchingStringAsync(searchTerm);
@@ -84,6 +94,7 @@ public static class BoxEndpoints
         .WithOpenApi()
         .WithName(BOX_SEARCH_DETAILS);
         
+        // GET - get all item IDs contained inside the specified box.
         routeGroup.MapGet("/itemids/{id}", async (IBoxService boxService, int id) =>
         {
             var allItemIds = await boxService.GetBoxAllItemIdsAsync(id);
@@ -99,6 +110,7 @@ public static class BoxEndpoints
         .WithOpenApi()
         .WithName(BOX_GET_ITEM_IDS);
 
+        // POST - create a new box.
         routeGroup.MapPost("/create", async (IBoxService boxService, BoxCreateDto createDto) =>
         {
             var locationInfo = await boxService.CreateBoxAsync(createDto);
@@ -109,6 +121,7 @@ public static class BoxEndpoints
         .WithOpenApi()
         .WithName(BOX_CREATE);
 
+        // PUT - move a box to a new (existing) location.
         routeGroup.MapPut("/move", async (IBoxService boxService, BoxMoveDto moveDto) =>
         {
             var movedBoxInfo = await boxService.MoveBoxLocationAsync(moveDto);
@@ -124,6 +137,7 @@ public static class BoxEndpoints
         .WithOpenApi()
         .WithName(BOX_MOVE_LOCATION);
         
+        // DELETE - delete the specified box.
         routeGroup.MapDelete("/delete/{id}", async (IBoxService boxService, int id) =>
         {
             var locationDeleted = await boxService.DeleteBoxAsync(id);

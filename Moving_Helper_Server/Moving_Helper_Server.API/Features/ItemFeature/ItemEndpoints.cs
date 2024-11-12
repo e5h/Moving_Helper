@@ -14,10 +14,16 @@ public static class ItemEndpoints
     public const string ITEM_MOVE_LOCATION   = "MoveItemLocation";
     public const string ITEM_DELETE          = "DeleteItem";
 
+    /// <summary>
+    /// Maps all endpoints specified in the item service interface.
+    /// </summary>
+    /// <param name="app">The built web application object.</param>
+    /// <returns>The route group with all endpoints.</returns>
     public static RouteGroupBuilder MapItemEndpoints(this WebApplication app)
     {
         var routeGroup = app.MapGroup(ITEM_ENDPOINT_HANDLE);
 
+        // GET - get information DTOs for all items in the database.
         routeGroup.MapGet("/info", async (IItemService itemService) =>
         {
             var allItemInfo = await itemService.GetAllItemInfoAsync();
@@ -28,6 +34,7 @@ public static class ItemEndpoints
         .WithOpenApi()
         .WithName(ITEM_GET_ALL_INFO);
         
+        // GET - get detail DTOs for all items in the database.
         routeGroup.MapGet("/details", async (IItemService itemService) =>
         {
             var allItemDetails = await itemService.GetAllItemDetailsAsync();
@@ -38,6 +45,7 @@ public static class ItemEndpoints
         .WithOpenApi()
         .WithName(ITEM_GET_ALL_DETAILS);
         
+        // GET - get an information DTO for the specified item.
         routeGroup.MapGet("/info/{id}", async (IItemService itemService, int id) =>
         {
             var locationInfo = await itemService.GetItemInfoAsync(id);
@@ -53,6 +61,7 @@ public static class ItemEndpoints
         .WithOpenApi()
         .WithName(ITEM_GET_INFO);
         
+        // GET - get a details DTO for the specified item.
         routeGroup.MapGet("/details/{id}", async (IItemService itemService, int id) =>
         {
             var locationDetails = await itemService.GetItemDetailsAsync(id);
@@ -68,6 +77,7 @@ public static class ItemEndpoints
         .WithOpenApi()
         .WithName(ITEM_GET_DETAILS);
         
+        // GET - get detail DTOs for all items matching the specified search term.
         routeGroup.MapGet("/search", async (IItemService itemService, string searchTerm) =>
         {
             var matchingItemDetails = await itemService.GetItemDetailsMatchingStringAsync(searchTerm);
@@ -83,6 +93,7 @@ public static class ItemEndpoints
         .WithOpenApi()
         .WithName(ITEM_SEARCH_DETAILS);
 
+        // POST - create a new item.
         routeGroup.MapPost("/create", async (IItemService itemService, ItemCreateDto createDto) =>
         {
             var locationInfo = await itemService.CreateItemAsync(createDto);
@@ -93,6 +104,7 @@ public static class ItemEndpoints
         .WithOpenApi()
         .WithName(ITEM_CREATE);
 
+        // PUT - move an item to a new (existing) box.
         routeGroup.MapPut("/move", async (IItemService itemService, ItemMoveDto moveDto) =>
         {
             var movedItemInfo = await itemService.MoveItemBoxAsync(moveDto);
@@ -108,6 +120,7 @@ public static class ItemEndpoints
         .WithOpenApi()
         .WithName(ITEM_MOVE_LOCATION);
         
+        // DELETE - delete the specified item.
         routeGroup.MapDelete("/delete/{id}", async (IItemService itemService, int id) =>
         {
             var locationDeleted = await itemService.DeleteItemAsync(id);
