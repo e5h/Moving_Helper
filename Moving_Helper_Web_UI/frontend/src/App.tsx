@@ -1,35 +1,59 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import LocationSearchPage from './pages/LocationSearchPage';
+import BoxSearchPage from './pages/BoxSearchPage';
+import ItemSearchPage from './pages/ItemSearchPage';
+import SettingsPage from './pages/SettingsPage';
+import MainLayout from './components/MainLayout';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const App: React.FC = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <MainLayout>
+                            <HomePage/>
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path="/locations"
+                    element={
+                        <MainLayout>
+                            <LocationSearchPage/>
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path="/boxes"
+                    element={
+                        <MainLayout>
+                            <BoxSearchPage/>
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path="/items"
+                    element={
+                        <MainLayout>
+                            <ItemSearchPage/>
+                        </MainLayout>
+                    }
+                />
+                <Route
+                    path="/settings"
+                    element={
+                        <MainLayout>
+                            <SettingsPage/>
+                        </MainLayout>
+                    }
+                />
+            </Routes>
+        </Router>
+    );
+};
 
 export default App

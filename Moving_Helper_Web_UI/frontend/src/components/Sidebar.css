@@ -1,0 +1,23 @@
+﻿/* src/components/Sidebar.css */
+.sidebar {
+    width: 200px;
+    background-color: #f5f5f5;
+    padding: 10px;
+    height: calc(100vh - 50px); /* Subtract title bar height */
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 50px; /* Account for title bar height */
+    left: 0;
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+.sidebar nav a:hover {
+    background-color: #ddd;
+}
