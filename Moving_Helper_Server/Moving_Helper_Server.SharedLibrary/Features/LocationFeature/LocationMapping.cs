@@ -1,4 +1,6 @@
-﻿namespace Moving_Helper_Server.SharedLibrary.Features.LocationFeature;
+﻿using Moving_Helper_Server.SharedLibrary.Common;
+
+namespace Moving_Helper_Server.SharedLibrary.Features.LocationFeature;
 
 public static class LocationMapping
 {
@@ -7,7 +9,8 @@ public static class LocationMapping
         return new Location
         {
             Name = createDto.Name,
-            Description = createDto.Description
+            Description = createDto.Description,
+            PictureId = Constants.NO_IMAGE_INDEX
         };
     }
 

@@ -1,4 +1,6 @@
-﻿namespace Moving_Helper_Server.SharedLibrary.Features.ItemFeature;
+﻿using Moving_Helper_Server.SharedLibrary.Common;
+
+namespace Moving_Helper_Server.SharedLibrary.Features.ItemFeature;
 
 public static class ItemMapping
 {
@@ -8,7 +10,7 @@ public static class ItemMapping
         {
             Name = createDto.Name,
             Description = createDto.Description,
-            PictureId = createDto.PictureId,
+            PictureId = Constants.NO_IMAGE_INDEX,
             BoxId = createDto.BoxId
         };
     }

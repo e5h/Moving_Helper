@@ -1,4 +1,6 @@
-﻿namespace Moving_Helper_Server.SharedLibrary.Features.BoxFeature;
+﻿using Moving_Helper_Server.SharedLibrary.Common;
+
+namespace Moving_Helper_Server.SharedLibrary.Features.BoxFeature;
 
 public static class BoxMapping
 {
@@ -8,7 +10,10 @@ public static class BoxMapping
         {
             Label = createDto.Label,
             Description = createDto.Description,
-            LocationId = createDto.LocationId
+            LocationId = createDto.LocationId,
+            MoveFromId = Constants.NO_LOCATION_INDEX,
+            MoveToId = Constants.NO_LOCATION_INDEX,
+            PictureId = Constants.NO_IMAGE_INDEX
         };
     }
 

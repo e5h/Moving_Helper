@@ -5,8 +5,7 @@ namespace Moving_Helper_Server.SharedLibrary.Features.ItemFeature;
 public record ItemCreateDto(
     [Required] [MaxLength(50)] string Name,
     [Required] [MaxLength(512)] string Description,
-    [Required] int BoxId,
-    [Required] int PictureId
+    [Required] int BoxId
 );
 
 public record ItemInfoDto(
