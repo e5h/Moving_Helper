@@ -1,7 +1,7 @@
 ﻿import React, {useState} from 'react';
 import viteLogo from "../assets/vite.svg";
 import reactLogo from "../assets/react.svg";
-import './HomePage.css'
+import '../styles/HomePage.css'
 
 const HomePage: React.FC = () => {
     const [count, setCount] = useState(0)
