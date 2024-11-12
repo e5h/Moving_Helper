@@ -84,7 +84,7 @@ public class MovingHelperDbContext(
             .HasData(new Picture
             {
                 Id = 1,
-                Path = "/data/pictures/no_img.jpg",
+                FileName = "no_img.jpg",
                 Description = "Default value, no assigned picture."
             });
         

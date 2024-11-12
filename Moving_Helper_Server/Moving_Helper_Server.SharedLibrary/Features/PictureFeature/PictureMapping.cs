@@ -6,7 +6,7 @@ public static class PictureMapping
     {
         return new Picture
         {
-            Path        = createDto.Path,
+            FileName        = createDto.FileName,
             Description = createDto.Description
         };
     }
@@ -16,7 +16,7 @@ public static class PictureMapping
         return new Picture
         {
             Id          = infoDto.Id,
-            Path        = infoDto.Path,
+            FileName        = infoDto.FileName,
             Description = infoDto.Description
         };
     }
@@ -26,7 +26,7 @@ public static class PictureMapping
         return new PictureInfoDto
         (
             pictureEntity.Id,
-            pictureEntity.Path,
+            pictureEntity.FileName,
             pictureEntity.Description
         );
     }
@@ -36,7 +36,7 @@ public static class PictureMapping
         return new PictureDetailsDto
         (
             pictureEntity.Id,
-            pictureEntity.Path,
+            pictureEntity.FileName,
             pictureEntity.Description
         );
     }
