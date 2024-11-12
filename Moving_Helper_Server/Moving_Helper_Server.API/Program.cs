@@ -24,6 +24,27 @@ builder.Services.AddSwaggerGen();
 
 // TODO: Set up a logger (Serilog?)
 
+var frontendHostString = builder.Configuration.GetConnectionString("MovingHelperFrontend");
+
+if (frontendHostString != null)
+{
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowSpecificOrigin", policy =>
+        {
+            policy.WithOrigins(frontendHostString)
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
+    Console.WriteLine("Configured CORS for frontend host: " + frontendHostString);
+}
+else
+{
+    Console.WriteLine("Moving helper frontend address has not been configured! CORS is unavailable.");
+    Console.WriteLine("Add the 'MovingHelperFrontend' address to 'appsettings.json'.");
+}
+
 // Build the application
 var app = builder.Build();
 
