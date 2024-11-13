@@ -1,5 +1,4 @@
-﻿// BoxSearchPage.tsx
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BoxDetailsDto } from '../dtos/BoxDtos';
 import { useCache } from '../components/CacheContext';
@@ -10,9 +9,9 @@ const BoxSearchPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState<string>(() => localStorage.getItem('boxFilter') || '');
     const [filteredBoxes, setFilteredBoxes] = useState<BoxDetailsDto[]>([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showBoxModal, setShowBoxModal] = useState(false);
     const navigate = useNavigate();
-    const { boxes, setBoxes } = useCache();
+    const { clearCache, boxes, setBoxes } = useCache();
 
     useEffect(() => {
         if (boxes) {
@@ -63,6 +62,16 @@ const BoxSearchPage: React.FC = () => {
         navigate(`/boxes/${id}`);
     };
 
+    const handleCloseModal = () => {
+        setShowBoxModal(false);
+    }
+
+    const handleAddSuccess = () => {
+        clearCache();
+        setShowBoxModal(false);
+        fetchBoxes();
+    }
+
     return (
         <div className="box-search">
             <h1>Box Search</h1>
@@ -78,15 +87,12 @@ const BoxSearchPage: React.FC = () => {
                 <button onClick={handleClearFilter}>Clear</button>
             </div>
 
-            <button className="add-box-button" onClick={() => setShowModal(true)}>Add Box</button>
+            <button className="add-box-button" onClick={() => setShowBoxModal(true)}>Add Box</button>
 
-            {showModal && (
+            {showBoxModal && (
                 <BoxFormModal
-                    onClose={() => setShowModal(false)}
-                    onAddSuccess={() => {
-                        setBoxes([]); // Clear the cache after adding a new box
-                        fetchBoxes();
-                    }}
+                    onClose={handleCloseModal}
+                    onAddSuccess={handleAddSuccess}
                 />
             )}
 

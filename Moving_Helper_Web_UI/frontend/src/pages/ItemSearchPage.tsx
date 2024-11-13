@@ -1,5 +1,4 @@
-﻿// ItemSearchPage.tsx
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ItemDetailsDto } from '../dtos/ItemDtos';
 import { useCache } from '../components/CacheContext';
@@ -10,9 +9,9 @@ const ItemSearchPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState<string>(() => localStorage.getItem('itemFilter') || '');
     const [filteredItems, setFilteredItems] = useState<ItemDetailsDto[]>([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showItemModal, setShowItemModal] = useState(false);
     const navigate = useNavigate();
-    const { items, setItems } = useCache();
+    const { clearCache, items, setItems } = useCache();
 
     useEffect(() => {
         if (items) {
@@ -63,6 +62,16 @@ const ItemSearchPage: React.FC = () => {
         navigate(`/items/${id}`);
     };
 
+    const handleCloseModal = () => {
+        setShowItemModal(false);
+    }
+
+    const handleAddSuccess = () => {
+        clearCache();
+        setShowItemModal(false);
+        fetchItems();
+    }
+
     return (
         <div className="item-search">
             <h1>Item Search</h1>
@@ -78,15 +87,12 @@ const ItemSearchPage: React.FC = () => {
                 <button onClick={handleClearFilter}>Clear</button>
             </div>
 
-            <button className="add-item-button" onClick={() => setShowModal(true)}>Add Item</button>
+            <button className="add-item-button" onClick={() => setShowItemModal(true)}>Add Item</button>
 
-            {showModal && (
+            {showItemModal && (
                 <ItemFormModal
-                    onClose={() => setShowModal(false)}
-                    onAddSuccess={() => {
-                        setItems([]); // Clear the cache after adding a new item
-                        fetchItems();
-                    }}
+                    onClose={handleCloseModal}
+                    onAddSuccess={handleAddSuccess}
                 />
             )}
 

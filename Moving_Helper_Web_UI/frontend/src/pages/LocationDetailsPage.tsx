@@ -1,13 +1,14 @@
-﻿// LocationDetailsPage.tsx
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { LocationDetailsDto } from '../dtos/LocationDtos';
 import { BoxInfoDto } from '../dtos/BoxDtos';
 import { useNavigation } from '../components/NavigationContext';
+import { useCache} from "../components/CacheContext.tsx";
 import BoxFormModal from '../components/BoxFormModal'; // Import the BoxFormModal component
 import '../styles/LocationDetailsPage.css';
 
 const LocationDetailsPage: React.FC = () => {
+    const { clearCache } = useCache();
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { setLastViewedLocationId } = useNavigation();
@@ -67,6 +68,7 @@ const LocationDetailsPage: React.FC = () => {
     };
 
     const handleAddSuccess = () => {
+        clearCache();
         setShowBoxModal(false);
         fetchLocationDetails();
     }

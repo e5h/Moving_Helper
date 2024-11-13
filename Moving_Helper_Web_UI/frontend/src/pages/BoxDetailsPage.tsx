@@ -1,13 +1,14 @@
-﻿// BoxDetailsPage.tsx
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BoxDetailsDto } from '../dtos/BoxDtos';
 import { ItemInfoDto } from '../dtos/ItemDtos';
 import { useNavigation } from '../components/NavigationContext';
+import { useCache} from "../components/CacheContext.tsx";
 import ItemFormModal from '../components/ItemFormModal'; // Import the modal component
 import '../styles/BoxDetailsPage.css';
 
 const BoxDetailsPage: React.FC = () => {
+    const { clearCache } = useCache();
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { setLastViewedBoxId } = useNavigation();
@@ -75,7 +76,9 @@ const BoxDetailsPage: React.FC = () => {
     };
 
     const handleAddSuccess = () => {
+        clearCache();
         setShowItemModal(false);
+        fetchBoxDetails();
     }
 
     if (loading) {

@@ -1,6 +1,4 @@
-﻿// LocationFormModal.tsx
-import React, { useState } from 'react';
-import {useCache} from "./CacheContext.tsx";
+﻿import React, { useState } from 'react';
 import '../styles/LocationFormModal.css';
 
 interface LocationFormModalProps {
@@ -9,8 +7,6 @@ interface LocationFormModalProps {
 }
 
 const LocationFormModal: React.FC<LocationFormModalProps> = ({ onClose, onAddSuccess }) => {
-    const {clearCache} = useCache();
-
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [picture, setPicture] = useState<File | null>(null);
@@ -73,7 +69,6 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({ onClose, onAddSuc
 
             if (!response.ok) throw new Error('Failed to create location');
 
-            clearCache();
             onAddSuccess(); // Trigger cache invalidation on successful addition
             onClose(); // Close the modal
         } catch (error) {

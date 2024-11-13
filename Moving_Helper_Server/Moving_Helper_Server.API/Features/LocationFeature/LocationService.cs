@@ -22,16 +22,11 @@ public class LocationService(MovingHelperDbContext dbContext) : ILocationService
             .Include(l => l.Picture)
             .Select(l =>
                 l.ToDetailsDto(
-                    // Details DTO requires a list of the item IDs. This is a complicated
-                    // query to retrieve them all, because there are no collection variables
-                    // in the models of this application.
+                    // Details DTO requires a list of the box IDs.
                     dbContext.Boxes
                         .Where(b => b.LocationId == l.Id) // All boxes in location
-                        .Join(dbContext.Items,
-                            box => box.Id,
-                            item => item.BoxId,
-                            (box, item) => item.Id) // Join boxes and items based on box ID
-                        .ToArray()) // Take the item IDs and put them in an array
+                        .Select(b => b.Id)
+                        .ToArray())
             )
             .AsNoTracking()
             .ToListAsync();
@@ -57,16 +52,11 @@ public class LocationService(MovingHelperDbContext dbContext) : ILocationService
             .Include(l => l.Picture)
             .Select(l =>
                 l.ToDetailsDto(
-                    // Details DTO requires a list of the item IDs. This is a complicated
-                    // query to retrieve them all, because there are no collection variables
-                    // in the models of this application.
+                    // Details DTO requires a list of the box IDs.
                     dbContext.Boxes
                         .Where(b => b.LocationId == l.Id) // All boxes in location
-                        .Join(dbContext.Items,
-                            box => box.Id,
-                            item => item.BoxId,
-                            (box, item) => item.Id) // Join boxes and items based on box ID
-                        .ToArray())                 // Take the item IDs and put them in an array
+                        .Select(b => b.Id)
+                        .ToArray())
             )
             .AsNoTracking()
             .FirstOrDefaultAsync();
@@ -84,16 +74,11 @@ public class LocationService(MovingHelperDbContext dbContext) : ILocationService
             .Include(l => l.Picture)
             .Select(l =>
                 l.ToDetailsDto(
-                    // Details DTO requires a list of the item IDs. This is a complicated
-                    // query to retrieve them all, because there are no collection variables
-                    // in the models of this application.
+                    // Details DTO requires a list of the box IDs.
                     dbContext.Boxes
                         .Where(b => b.LocationId == l.Id) // All boxes in location
-                        .Join(dbContext.Items,
-                            box => box.Id,
-                            item => item.BoxId,
-                            (box, item) => item.Id) // Join boxes and items based on box ID
-                        .ToArray())                 // Take the item IDs and put them in an array
+                        .Select(b => b.Id)
+                        .ToArray())
             )
             .AsNoTracking()
             .ToListAsync();

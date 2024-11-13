@@ -1,6 +1,4 @@
-﻿// ItemFormModal.tsx
-import React, { useState, useEffect } from 'react';
-import { useCache} from "./CacheContext.tsx";
+﻿import React, { useState } from 'react';
 import '../styles/ItemFormModal.css';
 
 interface ItemFormModalProps {
@@ -10,20 +8,11 @@ interface ItemFormModalProps {
 }
 
 const ItemFormModal: React.FC<ItemFormModalProps> = ({ onClose, onAddSuccess, boxId }) => {
-    const {clearCache} = useCache();
-
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [boxIdInput, setBoxIdInput] = useState<number | ''>(boxId || ''); // Initialize with boxId if provided
+    const [boxIdInput, setBoxIdInput] = useState<number | ''>(boxId || ''); // Initialize with boxId directly
     const [picture, setPicture] = useState<File | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
-
-    // Set boxIdInput if boxId prop is provided
-    useEffect(() => {
-        if (boxId) {
-            setBoxIdInput(boxId);
-        }
-    }, [boxId]);
 
     // Handle file selection for picture upload
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,9 +72,8 @@ const ItemFormModal: React.FC<ItemFormModalProps> = ({ onClose, onAddSuccess, bo
 
             if (!response.ok) throw new Error('Failed to create item');
 
-            clearCache();
-            onAddSuccess(); // Trigger cache invalidation on successful addition
-            onClose(); // Close the modal
+            onAddSuccess();
+            onClose();
         } catch (error) {
             console.error('Error creating item:', error);
         }

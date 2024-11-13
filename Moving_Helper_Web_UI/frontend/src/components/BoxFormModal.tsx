@@ -1,6 +1,4 @@
-﻿// BoxFormModal.tsx
-import React, { useEffect, useState } from 'react';
-import { useCache} from "./CacheContext.tsx";
+﻿import React, { useState } from 'react';
 import '../styles/BoxFormModal.css';
 
 interface BoxFormModalProps {
@@ -10,22 +8,13 @@ interface BoxFormModalProps {
 }
 
 const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, locationId }) => {
-    const { clearCache } = useCache();
-
     const [label, setLabel] = useState('');
     const [description, setDescription] = useState('');
-    const [locationIdInput, setLocationIdInput] = useState<number | ''>(locationId || ''); // Renamed to avoid conflict
+    const [locationIdInput, setLocationIdInput] = useState<number | ''>(locationId || ''); // Initialize with locationId directly
     const [moveFromId, setMoveFromId] = useState<number | null>(null);
     const [moveToId, setMoveToId] = useState<number | null>(null);
     const [picture, setPicture] = useState<File | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
-
-    useEffect(() => {
-        // Set the location ID if the prop is provided
-        if (locationId) {
-            setLocationIdInput(locationId);
-        }
-    }, [locationId]);
 
     // Handle file selection for picture upload
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +41,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
             if (!response.ok) throw new Error('Picture upload failed');
             const result = await response.json();
             setUploadSuccess(`Picture uploaded: ${result.fileName} with ID: ${result.id}`);
-            return result.id; // Return the picture ID from PictureInfoDto
+            return result.id;
         } catch (error) {
             console.error('Error uploading picture:', error);
             setUploadSuccess('Picture upload failed');
@@ -65,14 +54,14 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
         let pictureId = null;
 
         if (picture) {
-            pictureId = await uploadPicture(picture); // Upload picture first and get the ID
-            if (!pictureId) return; // If picture upload fails, stop the submission
+            pictureId = await uploadPicture(picture);
+            if (!pictureId) return;
         }
 
         const boxData = {
             label,
             description,
-            locationId: locationIdInput || 0, // Ensure LocationId is provided
+            locationId: locationIdInput || 0,
             moveFromId: moveFromId ?? undefined,
             moveToId: moveToId ?? undefined,
             pictureId: pictureId ?? undefined,
@@ -87,9 +76,8 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
 
             if (!response.ok) throw new Error('Failed to create box');
 
-            clearCache();
-            onAddSuccess(); // Trigger cache invalidation on successful addition
-            onClose(); // Close the modal
+            onAddSuccess();
+            onClose();
         } catch (error) {
             console.error('Error creating box:', error);
         }

@@ -9,14 +9,14 @@ const LocationSearchPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState<string>(() => localStorage.getItem('locationFilter') || '');
     const navigate = useNavigate();
-    const { locations, setLocations } = useCache();
     const [filteredLocations, setFilteredLocations] = useState<LocationDetailsDto[]>([]);
-    const [showModal, setShowModal] = useState(false);
+    const [showLocationModal, setShowLocationModal] = useState(false);
+    const { clearCache, locations, setLocations } = useCache();
 
     useEffect(() => {
         if (locations) {
             setLoading(false);
-            setFilteredLocations(applyFilter(filter, locations)); // Apply initial filter if it exists in localStorage
+            applyFilter(filter, locations); // Apply initial filter if it exists in localStorage
         } else {
             fetchAllLocations();
         }
@@ -29,7 +29,7 @@ const LocationSearchPage: React.FC = () => {
             if (!response.ok) throw new Error('Failed to fetch locations');
             const data: LocationDetailsDto[] = await response.json();
             setLocations(data);
-            setFilteredLocations(filter ? applyFilter(filter, data) : data); // Apply filter on initial load if set
+            applyFilter(filter, data);
         } catch (error) {
             console.error('Error fetching locations:', error);
         } finally {
@@ -39,10 +39,11 @@ const LocationSearchPage: React.FC = () => {
 
     // Modify applyFilter to return the filtered list instead of setting state directly
     const applyFilter = (searchTerm: string, locationsToFilter: LocationDetailsDto[]) => {
-        return locationsToFilter.filter(location =>
+        const filtered = locationsToFilter.filter(location =>
             location.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             location.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
+        setFilteredLocations(filtered);
     };
 
     // Handle filter input change with real-time filtering and localStorage persistence
@@ -50,7 +51,7 @@ const LocationSearchPage: React.FC = () => {
         const newFilter = event.target.value;
         setFilter(newFilter);
         localStorage.setItem('locationFilter', newFilter); // Save filter term to localStorage
-        setFilteredLocations(applyFilter(newFilter, locations || [])); // Apply filter in real-time
+        applyFilter(newFilter, locations || []); // Apply filter in real-time
     };
 
     const handleClearFilter = () => {
@@ -62,6 +63,16 @@ const LocationSearchPage: React.FC = () => {
     const handleRowClick = (id: number) => {
         navigate(`/locations/${id}`);
     };
+
+    const handleCloseModal = () => {
+        setShowLocationModal(false);
+    }
+
+    const handleAddSuccess = () => {
+        clearCache();
+        setShowLocationModal(false);
+        fetchAllLocations();
+    }
 
     return (
         <div className="location-search">
@@ -78,15 +89,12 @@ const LocationSearchPage: React.FC = () => {
                 <button onClick={handleClearFilter}>Clear</button>
             </div>
 
-            <button className="add-location-button" onClick={() => setShowModal(true)}>Add Location</button>
+            <button className="add-location-button" onClick={() => setShowLocationModal(true)}>Add Location</button>
 
-            {showModal && (
+            {showLocationModal && (
                 <LocationFormModal
-                    onClose={() => setShowModal(false)}
-                    onAddSuccess={() => {
-                        setLocations([]); // Invalidate the cache after adding
-                        fetchAllLocations();
-                    }}
+                    onClose={handleCloseModal}
+                    onAddSuccess={handleAddSuccess}
                 />
             )}
 
