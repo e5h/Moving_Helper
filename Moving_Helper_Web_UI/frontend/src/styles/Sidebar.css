@@ -1,20 +1,26 @@
 ﻿/* src/components/Sidebar.css */
 
 .sidebar {
-    width: 200px;
+    width: 120px;
     background-color: #f5f5f5;
     padding: 10px;
-    height: calc(100vh - 50px); /* Subtract title bar height */
+    height: calc(100vh - 60px); /* Subtract title bar height */
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 50px; /* Account for title bar height */
+    top: 60px; /* Account for title bar height */
     left: 0;
 }
 
-.sidebar nav a,
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .sidebar nav button {
-    display: block;
+    display: flex;
+    align-items: center;
     width: 100%;
     padding: 10px;
     color: #333;
@@ -26,12 +32,25 @@
     font-size: 1rem;
 }
 
-.sidebar nav a:hover,
+.sidebar nav .icon {
+    font-size: 20px;
+    margin-right: 10px;
+    color: #333;
+}
+
 .sidebar nav button:hover {
+    background-color: #ddd;
+    filter: drop-shadow(0 0 5px #000000ff);
+    transition: background-color 0.3s, filter 0.3s;
+}
+
+.sidebar nav button.active,
+.sidebar nav button:focus {
+    outline: none;
     background-color: #ddd;
 }
 
-.sidebar nav button:focus {
-    outline: none;
-    background-color: #ddd; /* Optional: highlight the button when focused */
+.nav-bottom {
+    margin-top: auto;
+    margin-bottom: 20px;
 }
