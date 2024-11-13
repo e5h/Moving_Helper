@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picture Upload Test</title>
+</head>
+<body>
+<h1>Upload a Picture</h1>
+
+<form id="uploadForm">
+    <label for="fileInput">Select a picture:</label>
+    <input type="file" id="fileInput" name="file" accept="image/*" required><br><br>
+
+    <label for="descriptionInput">Description:</label>
+    <input type="text" id="descriptionInput" name="description" maxlength="255" required><br><br>
+
+    <button type="button" onclick="uploadPicture()">Upload Picture</button>
+</form>
+
+<script>
+    function uploadPicture() {
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+        const descriptionInput = document.getElementById("descriptionInput");
+        const description = descriptionInput.value;
+
+        if (!file || !description) {
+            alert("Please select a file and provide a description.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("Filename", file.name);
+        formData.append("Description", description);
+        formData.append("file", file);
+
+        fetch("http://localhost:6969/api/v1/picture/upload", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Upload failed");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Uploaded picture info:", data);
+                alert("Picture uploaded successfully!");
+            })
+            .catch(error => console.error("Error uploading picture:", error));
+    }
+</script>
+</body>
+</html>

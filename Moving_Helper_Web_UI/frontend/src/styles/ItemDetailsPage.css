@@ -1,0 +1,81 @@
+﻿/* ItemDetailsPage.css */
+
+/* Main container styling */
+.item-details {
+    width: 80%; /* Use 80% of the viewport width */
+    max-width: 1200px; /* Cap the width to avoid it getting too large */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Item name as the main header */
+.item-name {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center; /* Center the main title */
+}
+
+/* Description styling below the name */
+.item-description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+    text-align: center; /* Center the description */
+}
+
+/* Center the image */
+.item-picture {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+/* Button group styling */
+.button-group {
+    display: flex;
+    justify-content: center; /* Center the button group */
+    gap: 10px;
+    margin-top: 20px; /* Add spacing between the content and buttons */
+}
+
+/* Back button styling */
+.back-button {
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+/* Common styles for the location or container box */
+.location-box {
+    margin: 15px auto;
+    padding: 10px;
+    background-color: #f2f2f2;
+    color: #007bff;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    max-width: 300px;
+    transition: background-color 0.3s;
+}
+
+.location-box:hover {
+    background-color: #e0e0e0;
+}

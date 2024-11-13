@@ -33,3 +33,21 @@ Unpacking can involve a few different processes:
 - Search for a specific item to determine which box contains it, and where the box is located
 - Select a box to determine what it contains
 - See a record of which boxes have been moved, and where they have been moved to
+
+## Design
+
+### High Level
+
+![High Level Design](/Design%20Docs/design-diagrams-high-level.png "High Level Design")
+
+### Models
+
+![Models](/Design%20Docs/design-diagrams-models.png "Models")
+
+### Database
+
+![Database](/Design%20Docs/design-diagrams-database.png "Database")
+
+### API Endpoints
+
+![API Endpoints](/Design%20Docs/design-diagrams-api-endpoints.png "API Endpoints")
