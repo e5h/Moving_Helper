@@ -5,7 +5,10 @@ namespace Moving_Helper_Server.SharedLibrary.Features.BoxFeature;
 public record BoxCreateDto(
     [Required] [MaxLength(20)]  string Label,
     [Required] [MaxLength(512)] string Description,
-    [Required]                  int    LocationId
+    [Required]                  int    LocationId,
+    [Required]                  int?   MoveFromId,
+    [Required]                  int?   MoveToId,
+    [Required]                  int?   PictureId
 );
 
 public record BoxInfoDto(

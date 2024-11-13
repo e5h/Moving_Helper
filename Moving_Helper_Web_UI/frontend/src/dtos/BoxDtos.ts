@@ -12,3 +12,14 @@ export interface BoxDetailsDto {
     moveToName: string;
     pictureId: number;
 }
+
+// BoxDtos.ts
+export interface BoxInfoDto {
+    id: number;
+    label: string;
+    description: string;
+    locationId: number;
+    moveFromId: number;
+    moveToId: number;
+    pictureId: number;
+}

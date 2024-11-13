@@ -1,44 +1,99 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LocationDetailsDto } from '../dtos/LocationDtos';
-import '../styles/LocationSearchPage.css'
+import { useCache } from '../components/CacheContext';
+import LocationFormModal from '../components/LocationFormModal';
+import '../styles/LocationSearchPage.css';
 
 const LocationSearchPage: React.FC = () => {
-    const [locations, setLocations] = useState<LocationDetailsDto[]>([]);
     const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState<string>(() => localStorage.getItem('locationFilter') || '');
     const navigate = useNavigate();
+    const { locations, setLocations } = useCache();
+    const [filteredLocations, setFilteredLocations] = useState<LocationDetailsDto[]>([]);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        // Fetch data from API
-        fetch('/api/v1/locations/details')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setLocations(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching locations:', error);
-                setLoading(false);
-            });
-    }, []);
+        if (locations) {
+            setLoading(false);
+            setFilteredLocations(applyFilter(filter, locations)); // Apply initial filter if it exists in localStorage
+        } else {
+            fetchAllLocations();
+        }
+    }, [locations]);
 
-    // Handle the row click
+    const fetchAllLocations = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch('/api/v1/locations/details');
+            if (!response.ok) throw new Error('Failed to fetch locations');
+            const data: LocationDetailsDto[] = await response.json();
+            setLocations(data);
+            setFilteredLocations(filter ? applyFilter(filter, data) : data); // Apply filter on initial load if set
+        } catch (error) {
+            console.error('Error fetching locations:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Modify applyFilter to return the filtered list instead of setting state directly
+    const applyFilter = (searchTerm: string, locationsToFilter: LocationDetailsDto[]) => {
+        return locationsToFilter.filter(location =>
+            location.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            location.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    };
+
+    // Handle filter input change with real-time filtering and localStorage persistence
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newFilter = event.target.value;
+        setFilter(newFilter);
+        localStorage.setItem('locationFilter', newFilter); // Save filter term to localStorage
+        setFilteredLocations(applyFilter(newFilter, locations || [])); // Apply filter in real-time
+    };
+
+    const handleClearFilter = () => {
+        setFilter('');
+        localStorage.removeItem('locationFilter'); // Clear filter from localStorage
+        setFilteredLocations(locations || []); // Reset to full list if available
+    };
+
     const handleRowClick = (id: number) => {
         navigate(`/locations/${id}`);
-    }
+    };
 
     return (
-        <div>
+        <div className="location-search">
             <h1>Location Search</h1>
+
+            <div className="filter-section">
+                <label htmlFor="filterInput">Filter:</label>
+                <input
+                    id="filterInput"
+                    type="text"
+                    value={filter}
+                    onChange={handleFilterChange}
+                />
+                <button onClick={handleClearFilter}>Clear</button>
+            </div>
+
+            <button className="add-location-button" onClick={() => setShowModal(true)}>Add Location</button>
+
+            {showModal && (
+                <LocationFormModal
+                    onClose={() => setShowModal(false)}
+                    onAddSuccess={() => {
+                        setLocations([]); // Invalidate the cache after adding
+                        fetchAllLocations();
+                    }}
+                />
+            )}
+
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <table>
+                <table className="location-table">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -50,11 +105,11 @@ const LocationSearchPage: React.FC = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {locations.map((location) => (
+                    {filteredLocations.map((location) => (
                         <tr
                             key={location.id}
-                            onClick={() => handleRowClick(location.id)} // Set the click handler
-                            style={{cursor: 'pointer'}} // Add a pointer cursor for better UX
+                            onClick={() => handleRowClick(location.id)}
+                            style={{ cursor: 'pointer' }}
                         >
                             <td>{location.id}</td>
                             <td>{location.name}</td>

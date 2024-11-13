@@ -13,3 +13,11 @@ export interface ItemDetailsDto {
     moveToName: string;
     pictureId: number;
 }
+
+export interface ItemInfoDto {
+    id: number;
+    name: string;
+    description: string;
+    boxId: number;
+    pictureId: number
+}

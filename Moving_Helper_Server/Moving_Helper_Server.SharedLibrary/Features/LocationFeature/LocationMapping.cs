@@ -8,9 +8,9 @@ public static class LocationMapping
     {
         return new Location
         {
-            Name = createDto.Name,
+            Name        = createDto.Name,
             Description = createDto.Description,
-            PictureId = Constants.NO_IMAGE_INDEX
+            PictureId   = createDto.PictureId ?? Constants.NO_IMAGE_INDEX
         };
     }
 
@@ -18,10 +18,10 @@ public static class LocationMapping
     {
         return new Location
         {
-            Id = infoDto.Id,
-            Name = infoDto.Name,
+            Id          = infoDto.Id,
+            Name        = infoDto.Name,
             Description = infoDto.Description,
-            PictureId = infoDto.PictureId
+            PictureId   = infoDto.PictureId
         };
     }
 

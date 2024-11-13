@@ -2,42 +2,98 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ItemDetailsDto } from '../dtos/ItemDtos';
+import { useCache } from '../components/CacheContext';
+import ItemFormModal from '../components/ItemFormModal';
 import '../styles/ItemSearchPage.css';
 
 const ItemSearchPage: React.FC = () => {
-    const [items, setItems] = useState<ItemDetailsDto[]>([]);
     const [loading, setLoading] = useState(true);
+    const [filter, setFilter] = useState<string>(() => localStorage.getItem('itemFilter') || '');
+    const [filteredItems, setFilteredItems] = useState<ItemDetailsDto[]>([]);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
+    const { items, setItems } = useCache();
 
     useEffect(() => {
-        fetch('/api/v1/items/details')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setItems(data);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error('Error fetching items:', error);
-                setLoading(false);
-            });
-    }, []);
+        if (items) {
+            setLoading(false);
+            applyFilter(filter, items); // Apply initial filter if available
+        } else {
+            fetchItems();
+        }
+    }, [items]);
+
+    const fetchItems = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch('/api/v1/items/details');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data: ItemDetailsDto[] = await response.json();
+            setItems(data);
+            applyFilter(filter, data);
+        } catch (error) {
+            console.error('Error fetching items:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const applyFilter = (searchTerm: string, itemsToFilter: ItemDetailsDto[]) => {
+        const filtered = itemsToFilter.filter(item =>
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredItems(filtered);
+    };
+
+    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newFilter = event.target.value;
+        setFilter(newFilter);
+        localStorage.setItem('itemFilter', newFilter);
+        applyFilter(newFilter, items || []);
+    };
+
+    const handleClearFilter = () => {
+        setFilter('');
+        localStorage.removeItem('itemFilter');
+        setFilteredItems(items || []);
+    };
 
     const handleRowClick = (id: number) => {
         navigate(`/items/${id}`);
     };
 
     return (
-        <div>
+        <div className="item-search">
             <h1>Item Search</h1>
+
+            <div className="filter-section">
+                <label htmlFor="filterInput">Filter:</label>
+                <input
+                    id="filterInput"
+                    type="text"
+                    value={filter}
+                    onChange={handleFilterChange}
+                />
+                <button onClick={handleClearFilter}>Clear</button>
+            </div>
+
+            <button className="add-item-button" onClick={() => setShowModal(true)}>Add Item</button>
+
+            {showModal && (
+                <ItemFormModal
+                    onClose={() => setShowModal(false)}
+                    onAddSuccess={() => {
+                        setItems([]); // Clear the cache after adding a new item
+                        fetchItems();
+                    }}
+                />
+            )}
+
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <table>
+                <table className="item-table">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -51,7 +107,7 @@ const ItemSearchPage: React.FC = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {items.map((item) => (
+                    {filteredItems.map((item) => (
                         <tr
                             key={item.id}
                             onClick={() => handleRowClick(item.id)}
