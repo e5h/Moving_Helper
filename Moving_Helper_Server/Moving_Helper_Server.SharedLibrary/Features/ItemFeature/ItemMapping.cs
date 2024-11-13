@@ -8,10 +8,10 @@ public static class ItemMapping
     {
         return new Item
         {
-            Name = createDto.Name,
+            Name        = createDto.Name,
             Description = createDto.Description,
-            PictureId = Constants.NO_IMAGE_INDEX,
-            BoxId = createDto.BoxId
+            BoxId       = createDto.BoxId,
+            PictureId   = createDto.PictureId ?? Constants.NO_IMAGE_INDEX
         };
     }
 
@@ -19,11 +19,11 @@ public static class ItemMapping
     {
         return new Item
         {
-            Id   = infoDto.Id,
-            Name = infoDto.Name,
+            Id          = infoDto.Id,
+            Name        = infoDto.Name,
             Description = infoDto.Description,
-            BoxId = infoDto.BoxId,
-            PictureId = infoDto.PictureId
+            BoxId       = infoDto.BoxId,
+            PictureId   = infoDto.PictureId
         };
     }
 

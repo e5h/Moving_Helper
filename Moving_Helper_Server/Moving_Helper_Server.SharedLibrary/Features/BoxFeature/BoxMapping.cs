@@ -8,12 +8,12 @@ public static class BoxMapping
     {
         return new Box
         {
-            Label = createDto.Label,
+            Label       = createDto.Label,
             Description = createDto.Description,
-            LocationId = createDto.LocationId,
-            MoveFromId = Constants.NO_LOCATION_INDEX,
-            MoveToId = Constants.NO_LOCATION_INDEX,
-            PictureId = Constants.NO_IMAGE_INDEX
+            LocationId  = createDto.LocationId,
+            MoveFromId  = createDto.MoveFromId ?? Constants.NO_LOCATION_INDEX,
+            MoveToId    = createDto.MoveToId   ?? Constants.NO_LOCATION_INDEX,
+            PictureId   = createDto.PictureId  ?? Constants.NO_IMAGE_INDEX
         };
     }
 
@@ -21,13 +21,13 @@ public static class BoxMapping
     {
         return new Box
         {
-            Id = infoDto.Id,
-            Label = infoDto.Label,
+            Id          = infoDto.Id,
+            Label       = infoDto.Label,
             Description = infoDto.Description,
-            LocationId = infoDto.LocationId,
-            MoveFromId = infoDto.MoveFromId,
-            MoveToId = infoDto.MoveToId,
-            PictureId = infoDto.PictureId
+            LocationId  = infoDto.LocationId,
+            MoveFromId  = infoDto.MoveFromId,
+            MoveToId    = infoDto.MoveToId,
+            PictureId   = infoDto.PictureId
         };
     }
 

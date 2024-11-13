@@ -4,7 +4,8 @@ namespace Moving_Helper_Server.SharedLibrary.Features.LocationFeature;
 
 public record LocationCreateDto(
     [Required] [MaxLength(50)]  string Name,
-    [Required] [MaxLength(512)] string Description
+    [Required] [MaxLength(512)] string Description,
+    [Required]                  int?   PictureId
 );
 
 public record LocationInfoDto(
