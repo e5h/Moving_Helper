@@ -1,4 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { LocationDetailsDto } from '../dtos/LocationDtos';
 import { BoxDetailsDto } from '../dtos/BoxDtos';
@@ -25,21 +26,21 @@ const LocationDetailsPage: React.FC = () => {
 
     const fetchLocationDetails = async () => {
         try {
-            const locationResponse = await fetch(`/api/v1/locations/details/${id}`);
+            const locationResponse = await fetch(`${API_BASE_URL}locations/details/${id}`);
             if (!locationResponse.ok) throw new Error('Location fetch failed');
             const locationData: LocationDetailsDto = await locationResponse.json();
             setLocation(locationData);
 
             setLastViewedLocationId(Number(id));
 
-            const pictureResponse = await fetch(`/api/v1/picture/download/${locationData.pictureId}`);
+            const pictureResponse = await fetch(`${API_BASE_URL}picture/download/${locationData.pictureId}`);
             if (!pictureResponse.ok) throw new Error('Picture fetch failed');
             const pictureBlob = await pictureResponse.blob();
             const pictureUrl = URL.createObjectURL(pictureBlob);
             setPicture(pictureUrl);
 
             const boxPromises = locationData.boxIds.map((boxId) =>
-                fetch(`/api/v1/boxes/details/${boxId}`).then((response) => response.json())
+                fetch(`${API_BASE_URL}boxes/details/${boxId}`).then((response) => response.json())
             );
             const boxesData: BoxDetailsDto[] = await Promise.all(boxPromises);
             setBoxes(boxesData);

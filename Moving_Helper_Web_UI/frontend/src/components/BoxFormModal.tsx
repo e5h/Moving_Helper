@@ -1,4 +1,5 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useState, useEffect } from 'react';
 import { useCache } from '../components/CacheContext';
 import '../styles/BoxFormModal.css';
 import {LocationDetailsDto} from "../dtos/LocationDtos.ts";
@@ -24,7 +25,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
     useEffect(() => {
         const fetchAllLocations = async () => {
             try {
-                const response = await fetch('/api/v1/locations/details');
+                const response = await fetch(`${API_BASE_URL}locations/details`);
                 if (!response.ok) throw new Error('Failed to fetch locations');
                 const data: LocationDetailsDto[] = await response.json();
                 setLocations(data);
@@ -54,7 +55,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
         formData.append('Description', pictureDescription);
 
         try {
-            const response = await fetch('/api/v1/picture/upload', {
+            const response = await fetch(`${API_BASE_URL}picture/upload`, {
                 method: 'POST',
                 body: formData,
             });
@@ -89,7 +90,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
         };
 
         try {
-            const response = await fetch('/api/v1/boxes/create', {
+            const response = await fetch(`${API_BASE_URL}boxes/create`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(boxData),

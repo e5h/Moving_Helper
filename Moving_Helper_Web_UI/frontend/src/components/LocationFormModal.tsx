@@ -1,4 +1,5 @@
-﻿import React, { useState } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useState } from 'react';
 import '../styles/LocationFormModal.css';
 
 interface LocationFormModalProps {
@@ -30,7 +31,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({ onClose, onAddSuc
         formData.append('Description', pictureDescription);
 
         try {
-            const response = await fetch('/api/v1/picture/upload', {
+            const response = await fetch(`${API_BASE_URL}picture/upload`, {
                 method: 'POST',
                 body: formData,
             });
@@ -62,7 +63,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({ onClose, onAddSuc
         };
 
         try {
-            const response = await fetch('/api/v1/locations/create', {
+            const response = await fetch(`${API_BASE_URL}locations/create`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(locationData),

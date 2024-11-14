@@ -1,4 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BoxDetailsDto } from '../dtos/BoxDtos';
 import { ItemInfoDto } from '../dtos/ItemDtos';
@@ -27,7 +28,7 @@ const BoxDetailsPage: React.FC = () => {
     }, [id]);
     const fetchBoxDetails = async () => {
         try {
-            const boxResponse = await fetch(`/api/v1/boxes/details/${id}`);
+            const boxResponse = await fetch(`${API_BASE_URL}boxes/details/${id}`);
             if (!boxResponse.ok) throw new Error('Box fetch failed');
             const boxData: BoxDetailsDto = await boxResponse.json();
             setBox(boxData);
@@ -35,19 +36,19 @@ const BoxDetailsPage: React.FC = () => {
             setLastViewedBoxId(Number(id));
 
             if (boxData.pictureId) {
-                const pictureResponse = await fetch(`/api/v1/picture/download/${boxData.pictureId}`);
+                const pictureResponse = await fetch(`${API_BASE_URL}picture/download/${boxData.pictureId}`);
                 if (!pictureResponse.ok) throw new Error('Picture fetch failed');
                 const pictureBlob = await pictureResponse.blob();
                 setPicture(URL.createObjectURL(pictureBlob));
             }
 
-            const locationResponse = await fetch(`/api/v1/locations/info/${boxData.locationId}`);
+            const locationResponse = await fetch(`${API_BASE_URL}locations/info/${boxData.locationId}`);
             if (!locationResponse.ok) throw new Error('Location fetch failed');
             const locationData = await locationResponse.json();
             setLocationName(locationData.name);
 
             const itemPromises = boxData.itemIds.map((itemId) =>
-                fetch(`/api/v1/items/info/${itemId}`).then((response) => response.json())
+                fetch(`${API_BASE_URL}items/info/${itemId}`).then((response) => response.json())
             );
             setItems(await Promise.all(itemPromises));
         } catch (error) {

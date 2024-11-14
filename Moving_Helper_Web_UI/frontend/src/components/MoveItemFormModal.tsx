@@ -1,4 +1,5 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useState, useEffect } from 'react';
 import { useCache } from '../components/CacheContext';
 import '../styles/MoveItemFormModal.css';
 import {BoxDetailsDto} from "../dtos/BoxDtos.ts";
@@ -20,7 +21,7 @@ const MoveItemFormModal: React.FC<MoveItemFormModalProps> = ({ onClose, onAddSuc
     useEffect(() => {
         const fetchAllBoxes = async () => {
             try {
-                const response = await fetch('/api/v1/boxes/details');
+                const response = await fetch(`${API_BASE_URL}boxes/details`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data: BoxDetailsDto[] = await response.json();
                 setBoxes(data);
@@ -31,7 +32,7 @@ const MoveItemFormModal: React.FC<MoveItemFormModalProps> = ({ onClose, onAddSuc
 
         const fetchAllItems = async () => {
             try {
-                const response = await fetch('/api/v1/items/details');
+                const response = await fetch(`${API_BASE_URL}items/details`);
                 if (!response.ok) throw new Error('Failed to fetch locations');
                 const data: ItemDetailsDto[] = await response.json();
                 setItems(data);
@@ -56,7 +57,7 @@ const MoveItemFormModal: React.FC<MoveItemFormModalProps> = ({ onClose, onAddSuc
         }
 
         try{
-            const response = await fetch('/api/v1/items/move', {
+            const response = await fetch(`${API_BASE_URL}items/move`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(itemData),
