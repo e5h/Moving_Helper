@@ -6,6 +6,7 @@ import { useNavigation } from '../components/NavigationContext';
 import { useCache} from "../components/CacheContext.tsx";
 import ItemFormModal from '../components/ItemFormModal'; // Import the modal component
 import '../styles/BoxDetailsPage.css';
+import MoveBoxFormModal from "../components/MoveBoxFormModal.tsx";
 
 const BoxDetailsPage: React.FC = () => {
     const { clearCache } = useCache();
@@ -18,8 +19,12 @@ const BoxDetailsPage: React.FC = () => {
     const [items, setItems] = useState<ItemInfoDto[]>([]);
     const [locationName, setLocationName] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const [showItemModal, setShowItemModal] = useState(false); // State for modal visibility
+    const [showItemModal, setShowItemModal] = useState(false); // State for adding items
+    const [showMoveModal, setShowMoveModal] = useState(false); // State for moving box
 
+    useEffect(() => {
+        fetchBoxDetails();
+    }, [id]);
     const fetchBoxDetails = async () => {
         try {
             const boxResponse = await fetch(`/api/v1/boxes/details/${id}`);
@@ -52,10 +57,6 @@ const BoxDetailsPage: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        fetchBoxDetails();
-    }, [id]);
-
     const handleLocationClick = () => {
         if (box?.locationId) {
             navigate(`/locations/${box.locationId}`);
@@ -66,9 +67,17 @@ const BoxDetailsPage: React.FC = () => {
         setShowItemModal(true); // Open the modal
     };
 
-    const handleCloseModal = () => {
+    const handleMoveBox = () => {
+        setShowMoveModal(true);
+    }
+
+    const handleCloseItemModal = () => {
         setShowItemModal(false); // Close the modal
     };
+
+    const handleCloseMoveModal = () => {
+        setShowMoveModal(false);
+    }
 
     const handleBack = () => {
         setLastViewedBoxId(null);
@@ -78,6 +87,7 @@ const BoxDetailsPage: React.FC = () => {
     const handleAddSuccess = () => {
         clearCache();
         setShowItemModal(false);
+        setShowMoveModal(false);
         fetchBoxDetails();
     }
 
@@ -86,51 +96,80 @@ const BoxDetailsPage: React.FC = () => {
     }
 
     return (
-        <div className="box-details">
-            <div className="location-box" onClick={handleLocationClick}>
-                Located at <span>{locationName}</span>
+        <div className="details-container">
+            <div className="details-header">
+                <button className="back-button" onClick={handleBack}>
+                    <span className="material-icons icon">arrow_back</span>
+                    Back to Boxes
+                </button>
+                <h1 className="details-name">{box?.label}</h1>
+                <button className="move-button" onClick={handleMoveBox}>
+                    <span className="material-icons icon">local_shipping</span>
+                    Move Box
+                </button>
             </div>
 
-            <h1 className="box-name">{box?.label}</h1>
-            <p className="box-description">{box?.description}</p>
-
-            {picture && <img src={picture} alt={`Box ${box?.id}`} className="box-picture" />}
-
-            <div className="button-group">
-                <button className="back-button" onClick={handleBack}>Back to Boxes</button>
-                <button className="add-item-button" onClick={handleAddItem}>Add Item to Box</button>
+            <div className="details-body">
+                <div className="picture-frame">
+                    {picture && <img src={picture} alt={`Box ${box?.id}`} className="details-picture"/>}
+                </div>
+                <div className="details-body-info">
+                    <div className="details-metadata">
+                        <div className="located-at" onClick={handleLocationClick}>
+                            Located at: <span>"{locationName}"</span>
+                        </div>
+                    </div>
+                    <p className="details-description">{box?.description}</p>
+                </div>
             </div>
 
-            <h2 className="section-title">Items</h2>
-            {items.length > 0 ? (
-                <table className="item-table">
-                    <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Item Description</th>
-                        <th>Item ID</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {items.map((item) => (
-                        <tr key={item.id} onClick={() => navigate(`/items/${item.id}`)} style={{ cursor: 'pointer' }}>
-                            <td>{item.name}</td>
-                            <td>{item.description}</td>
-                            <td>{item.id}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p>No items available in this box.</p>
-            )}
+            <div className="subcontents-section">
+                <div className="subcontents-header">
+                    <h2 className="subcontents-title">Items In Box</h2>
+                    <button className="add-form-button" onClick={handleAddItem}>
+                        <span className="material-icons icon">add_box</span>
+                        Add Item To Box
+                    </button>
+                </div>
+                <div className="subcontents-body">
+                    {items.length > 0 ? (
+                        <table className="subcontents-table">
+                            <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Item Description</th>
+                                <th>Item ID</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {items.map((item) => (
+                                <tr key={item.id} onClick={() => navigate(`/items/${item.id}`)} style={{ cursor: 'pointer' }}>
+                                    <td>{item.name}</td>
+                                    <td>{item.description}</td>
+                                    <td>{item.id}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>No items available in this box.</p>
+                    )}
+                </div>
+            </div>
 
             {/* Render the modal */}
             {showItemModal && (
                 <ItemFormModal
-                    onClose={handleCloseModal}
+                    onClose={handleCloseItemModal}
                     onAddSuccess={handleAddSuccess} // Close modal after successful addition
                     boxId={Number(id)} // Pass the box ID to pre-populate
+                />
+            )}
+            {showMoveModal && (
+                <MoveBoxFormModal
+                    onClose={handleCloseMoveModal}
+                    onAddSuccess={handleAddSuccess}
+                    boxId={Number(id)}
                 />
             )}
         </div>

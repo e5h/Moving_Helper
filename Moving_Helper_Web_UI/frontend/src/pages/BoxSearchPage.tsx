@@ -73,21 +73,31 @@ const BoxSearchPage: React.FC = () => {
     }
 
     return (
-        <div className="box-search">
+        <div className="search-container">
             <h1>Box Search</h1>
 
-            <div className="filter-section">
-                <label htmlFor="filterInput">Filter:</label>
-                <input
-                    id="filterInput"
-                    type="text"
-                    value={filter}
-                    onChange={handleFilterChange}
-                />
-                <button onClick={handleClearFilter}>Clear</button>
-            </div>
+            <div className="search-options">
+                <div className="filter">
+                    <label htmlFor="filterInput">Filter:</label>
+                    <input
+                        id="filterInput"
+                        type="text"
+                        value={filter}
+                        onChange={handleFilterChange}
+                    />
+                    <button id="clearFilterButton" onClick={handleClearFilter}>
+                        <span className="material-icons icon">disabled_by_default</span>
+                        Clear
+                    </button>
+                </div>
 
-            <button className="add-box-button" onClick={() => setShowBoxModal(true)}>Add Box</button>
+                <div className="option-buttons">
+                    <button className="add-form-button" onClick={() => setShowBoxModal(true)}>
+                        <span className="material-icons icon">add_box</span>
+                        Add Box
+                    </button>
+                </div>
+            </div>
 
             {showBoxModal && (
                 <BoxFormModal
@@ -99,7 +109,7 @@ const BoxSearchPage: React.FC = () => {
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <table className="box-table">
+                <table className="search-table">
                     <thead>
                     <tr>
                         <th>ID</th>

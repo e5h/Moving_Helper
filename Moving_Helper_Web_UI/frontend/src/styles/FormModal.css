@@ -1,0 +1,104 @@
+﻿/* FormModal.css */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    width: 400px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    color: #000; /* Set default text color to black */
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #000; /* Ensure header text is black */
+}
+
+.modal-content label {
+    display: block;
+    margin: 10px 0;
+    text-align: left;
+    color: #000;
+}
+
+/* Styling for text and file input fields */
+.modal-content input[type="text"],
+.modal-content input[type="file"],
+.modal-content select {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #333; /* Dark background for input fields */
+    color: #fff; /* White text inside input fields */
+}
+
+.modal-content textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    resize: vertical;
+    min-height: 100px;
+    font-family: inherit;
+    line-height: 1.5;
+}
+
+/* Button styling */
+.modal-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-buttons button {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    margin: 5px 20px;
+    color: #333;
+    background-color: #aaa;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.2s, filter 0.4s;
+}
+
+.modal-buttons button .icon {
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.modal-buttons button:hover{
+    background-color: #aaa;
+    color: #0ff;
+    filter: drop-shadow(0 0 15px #00ffffff);
+}
+
+/* Confirm button styling */
+.modal-buttons button:first-of-type:hover {
+    background-color: #aaa;
+    color: #f55;
+    filter: drop-shadow(0 0 15px #ff5555ff);
+}

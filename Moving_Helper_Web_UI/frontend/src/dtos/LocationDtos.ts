@@ -6,3 +6,10 @@
     boxIds: number[];
     pictureId: number;
 }
+
+export interface LocationInfoDto {
+    id: number;
+    name: string;
+    description: string;
+    pictureId: number;
+}

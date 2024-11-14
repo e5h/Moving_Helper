@@ -1,5 +1,7 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useState, useEffect } from 'react';
+import { useCache } from '../components/CacheContext';
 import '../styles/BoxFormModal.css';
+import {LocationDetailsDto} from "../dtos/LocationDtos.ts";
 
 interface BoxFormModalProps {
     onClose: () => void;
@@ -15,8 +17,33 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
     const [moveToId, setMoveToId] = useState<number | null>(null);
     const [picture, setPicture] = useState<File | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
+    const [responseStatus, setResponseStatus] = useState<string | null>(null);
+    const { locations, setLocations } = useCache();
+    const [loading, setLoading] = useState(true);
 
-    // Handle file selection for picture upload
+    // Using the same cache provider on render to allow friendly names for locations
+    useEffect(() => {
+        if (locations) {
+            setLoading(false);
+        } else {
+            fetchAllLocations();
+        }
+    }, [locations]);
+
+    const fetchAllLocations = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch('/api/v1/locations/details');
+            if (!response.ok) throw new Error('Failed to fetch locations');
+            const data: LocationDetailsDto[] = await response.json();
+            setLocations(data);
+        } catch (error) {
+            console.error('Error fetching locations:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
             setPicture(event.target.files[0]);
@@ -62,9 +89,9 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
             label,
             description,
             locationId: locationIdInput || 0,
-            moveFromId: moveFromId ?? undefined,
-            moveToId: moveToId ?? undefined,
-            pictureId: pictureId ?? undefined,
+            moveFromId: moveFromId ?? null,
+            moveToId: moveToId ?? null,
+            pictureId: pictureId ?? null,
         };
 
         try {
@@ -74,6 +101,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
                 body: JSON.stringify(boxData),
             });
 
+            setResponseStatus(`Response: ${response.status} - ${response.statusText}`)
             if (!response.ok) throw new Error('Failed to create box');
 
             onAddSuccess();
@@ -89,37 +117,80 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
                 <h2>Add Box</h2>
                 <label>
                     Label:
-                    <input type="text" value={label} onChange={(e) => setLabel(e.target.value)} maxLength={20} required />
+                    <input type="text" value={label} onChange={(e) => setLabel(e.target.value)} maxLength={20}
+                           required/>
                 </label>
                 <label>
                     Description:
-                    <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} maxLength={512} required />
+                    <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)}
+                              rows={5} maxLength={512}></textarea>
                 </label>
-                <label>
-                    Location ID:
-                    <input
-                        type="number"
-                        value={locationIdInput}
-                        onChange={(e) => setLocationIdInput(Number(e.target.value))}
-                        required
-                    />
-                </label>
-                <label>
-                    Move From ID:
-                    <input type="number" value={moveFromId ?? ''} onChange={(e) => setMoveFromId(Number(e.target.value))} />
-                </label>
-                <label>
-                    Move To ID:
-                    <input type="number" value={moveToId ?? ''} onChange={(e) => setMoveToId(Number(e.target.value))} />
-                </label>
+                {loading ? (
+                    <p>Loading Locations...</p>
+                ) : (
+                    <div className="dropdown-labels">
+                        <label>
+                            Location:
+                            <select
+                                value={locationIdInput || ''}
+                                onChange={(e) => setLocationIdInput(Number(e.target.value))}
+                                required
+                            >
+                                <option value="">Select</option>
+                                {locations!.map((location) => (
+                                    <option key={location.id} value={location.id}>
+                                        {location.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                        <label>
+                            Move From:
+                            <select
+                                value={moveFromId || ''}
+                                onChange={(e) => setMoveFromId(Number(e.target.value))}
+                                required
+                            >
+                                <option value="">Select (optional)</option>
+                                {locations!.map((location) => (
+                                    <option key={location.id} value={location.id}>
+                                        {location.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                        <label>
+                            Move To:
+                            <select
+                                value={moveToId || ''}
+                                onChange={(e) => setMoveToId(Number(e.target.value))}
+                                required
+                            >
+                                <option value="">Select (optional)</option>
+                                {locations!.map((location) => (
+                                    <option key={location.id} value={location.id}>
+                                        {location.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    </div>
+                )}
                 <label>
                     Picture (optional):
-                    <input type="file" onChange={handleFileChange} />
+                    <input type="file" onChange={handleFileChange}/>
                 </label>
                 {uploadSuccess && <p>{uploadSuccess}</p>}
+                {responseStatus && <p>{responseStatus}</p>}
                 <div className="modal-buttons">
-                    <button onClick={handleBoxSubmit}>Add</button>
-                    <button onClick={onClose}>Cancel</button>
+                    <button onClick={onClose}>
+                        <span className="material-icons icon">close</span>
+                        Cancel
+                    </button>
+                    <button onClick={handleBoxSubmit}>
+                        <span className="material-icons icon">check</span>
+                        Confirm
+                    </button>
                 </div>
             </div>
         </div>
