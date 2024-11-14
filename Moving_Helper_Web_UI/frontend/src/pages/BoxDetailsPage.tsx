@@ -6,6 +6,7 @@ import { useNavigation } from '../components/NavigationContext';
 import { useCache} from "../components/CacheContext.tsx";
 import ItemFormModal from '../components/ItemFormModal'; // Import the modal component
 import '../styles/BoxDetailsPage.css';
+import MoveBoxFormModal from "../components/MoveBoxFormModal.tsx";
 
 const BoxDetailsPage: React.FC = () => {
     const { clearCache } = useCache();
@@ -18,7 +19,8 @@ const BoxDetailsPage: React.FC = () => {
     const [items, setItems] = useState<ItemInfoDto[]>([]);
     const [locationName, setLocationName] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
-    const [showItemModal, setShowItemModal] = useState(false); // State for modal visibility
+    const [showItemModal, setShowItemModal] = useState(false); // State for adding items
+    const [showMoveModal, setShowMoveModal] = useState(false); // State for moving box
 
     useEffect(() => {
         fetchBoxDetails();
@@ -65,9 +67,17 @@ const BoxDetailsPage: React.FC = () => {
         setShowItemModal(true); // Open the modal
     };
 
-    const handleCloseModal = () => {
+    const handleMoveBox = () => {
+        setShowMoveModal(true);
+    }
+
+    const handleCloseItemModal = () => {
         setShowItemModal(false); // Close the modal
     };
+
+    const handleCloseMoveModal = () => {
+        setShowMoveModal(false);
+    }
 
     const handleBack = () => {
         setLastViewedBoxId(null);
@@ -77,6 +87,7 @@ const BoxDetailsPage: React.FC = () => {
     const handleAddSuccess = () => {
         clearCache();
         setShowItemModal(false);
+        setShowMoveModal(false);
         fetchBoxDetails();
     }
 
@@ -92,6 +103,10 @@ const BoxDetailsPage: React.FC = () => {
                     Back to Boxes
                 </button>
                 <h1 className="details-name">{box?.label}</h1>
+                <button className="move-button" onClick={handleMoveBox}>
+                    <span className="material-icons icon">local_shipping</span>
+                    Move Box
+                </button>
             </div>
 
             <div className="details-body">
@@ -145,9 +160,16 @@ const BoxDetailsPage: React.FC = () => {
             {/* Render the modal */}
             {showItemModal && (
                 <ItemFormModal
-                    onClose={handleCloseModal}
+                    onClose={handleCloseItemModal}
                     onAddSuccess={handleAddSuccess} // Close modal after successful addition
                     boxId={Number(id)} // Pass the box ID to pre-populate
+                />
+            )}
+            {showMoveModal && (
+                <MoveBoxFormModal
+                    onClose={handleCloseMoveModal}
+                    onAddSuccess={handleAddSuccess}
+                    boxId={Number(id)}
                 />
             )}
         </div>
