@@ -1,17 +1,21 @@
-﻿// ItemDetailsPage.tsx
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ItemDetailsDto } from '../dtos/ItemDtos';
 import { useNavigation } from '../components/NavigationContext';
+import { useCache} from "../components/CacheContext.tsx";
 import '../styles/ItemDetailsPage.css';
+import MoveItemFormModal from "../components/MoveItemFormModal.tsx";
 
 const ItemDetailsPage: React.FC = () => {
+    const { clearCache } = useCache();
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { setLastViewedItemId } = useNavigation();
+
     const [item, setItem] = useState<ItemDetailsDto | null>(null);
     const [picture, setPicture] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showMoveModal, setShowMoveModal] = useState(false); // State for moving item
 
     useEffect(() => {
         fetchItemDetails();
@@ -55,6 +59,20 @@ const ItemDetailsPage: React.FC = () => {
         navigate('/items');
     };
 
+    const handleMoveItem = () => {
+        setShowMoveModal(true);
+    }
+
+    const handleCloseMoveItemModal = () => {
+        setShowMoveModal(false);
+    }
+
+    const handleAddSuccess = () => {
+        clearCache();
+        setShowMoveModal(false);
+        fetchItemDetails();
+    }
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -67,6 +85,10 @@ const ItemDetailsPage: React.FC = () => {
                     Back to Items
                 </button>
                 <h1 className="details-name">{item?.name}</h1>
+                <button className="move-button" onClick={handleMoveItem}>
+                    <span className="material-icons icon">local_shipping</span>
+                    Move Item
+                </button>
             </div>
 
             <div className="details-body">
@@ -85,6 +107,14 @@ const ItemDetailsPage: React.FC = () => {
                     <p className="details-description">{item?.description}</p>
                 </div>
             </div>
+
+            {showMoveModal && (
+                <MoveItemFormModal
+                    onClose={handleCloseMoveItemModal}
+                    onAddSuccess={handleAddSuccess}
+                    itemId={Number(id)}
+                />
+            )}
         </div>
     );
 };
