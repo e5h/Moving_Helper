@@ -48,10 +48,11 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
     // Function to upload picture and get the picture ID
     const uploadPicture = async (file: File): Promise<number | null> => {
         const pictureDescription = `Box: ${label} - ${description}`;
+        const newFileName = `box_${label.replace(/ /g, "-")}_${file.name.replace(/ /g, "-")}`;
 
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('Filename', file.name);
+        formData.append('Filename', newFileName);
         formData.append('Description', pictureDescription);
 
         try {
