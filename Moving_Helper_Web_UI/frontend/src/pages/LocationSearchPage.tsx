@@ -1,4 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LocationDetailsDto } from '../dtos/LocationDtos';
 import { useCache } from '../components/CacheContext';
@@ -25,7 +26,7 @@ const LocationSearchPage: React.FC = () => {
     const fetchAllLocations = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/v1/locations/details');
+            const response = await fetch(`${API_BASE_URL}locations/details`);
             if (!response.ok) throw new Error('Failed to fetch locations');
             const data: LocationDetailsDto[] = await response.json();
             setLocations(data);

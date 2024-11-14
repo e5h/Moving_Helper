@@ -1,4 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ItemDetailsDto } from '../dtos/ItemDtos';
 import { useCache } from '../components/CacheContext';
@@ -25,7 +26,7 @@ const ItemSearchPage: React.FC = () => {
     const fetchItems = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/v1/items/details');
+            const response = await fetch(`${API_BASE_URL}items/details`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data: ItemDetailsDto[] = await response.json();
             setItems(data);

@@ -30,7 +30,7 @@ if (frontendHostString != null)
 {
     builder.Services.AddCors(options =>
     {
-        options.AddPolicy("AllowSpecificOrigin", policy =>
+        options.AddPolicy("AllowViteServer", policy =>
         {
             policy.WithOrigins(frontendHostString)
                 .AllowAnyMethod()
@@ -65,6 +65,8 @@ else
 
 // Redirect HTTP requests to HTTPS when possible.
 app.UseHttpsRedirection();
+
+app.UseCors("AllowViteServer");
 
 // Migrate the database, prevents the need for manual dotnet command line operations.
 await app.MigrateDatabaseAsync();

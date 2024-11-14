@@ -1,4 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ItemDetailsDto } from '../dtos/ItemDtos';
 import { useNavigation } from '../components/NavigationContext';
@@ -23,14 +24,14 @@ const ItemDetailsPage: React.FC = () => {
 
     const fetchItemDetails = async () => {
         try {
-            const itemResponse = await fetch(`/api/v1/items/details/${id}`);
+            const itemResponse = await fetch(`${API_BASE_URL}items/details/${id}`);
             if (!itemResponse.ok) throw new Error('Item fetch failed');
             const itemData: ItemDetailsDto = await itemResponse.json();
             setItem(itemData);
             setLastViewedItemId(Number(id));
 
             if (itemData.pictureId) {
-                const pictureResponse = await fetch(`/api/v1/picture/download/${itemData.pictureId}`);
+                const pictureResponse = await fetch(`${API_BASE_URL}picture/download/${itemData.pictureId}`);
                 if (!pictureResponse.ok) throw new Error('Picture fetch failed');
                 const pictureBlob = await pictureResponse.blob();
                 setPicture(URL.createObjectURL(pictureBlob));

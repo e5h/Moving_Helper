@@ -1,4 +1,5 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useState, useEffect } from 'react';
 import { useCache } from "./CacheContext.tsx";
 import '../styles/ItemFormModal.css';
 import {BoxDetailsDto} from "../dtos/BoxDtos.ts";
@@ -21,7 +22,7 @@ const ItemFormModal: React.FC<ItemFormModalProps> = ({ onClose, onAddSuccess, bo
     useEffect(() => {
         const fetchBoxes = async () => {
             try {
-                const response = await fetch('/api/v1/boxes/details');
+                const response = await fetch(`${API_BASE_URL}boxes/details`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data: BoxDetailsDto[] = await response.json();
                 setBoxes(data);
@@ -52,7 +53,7 @@ const ItemFormModal: React.FC<ItemFormModalProps> = ({ onClose, onAddSuccess, bo
         formData.append('Description', pictureDescription);
 
         try {
-            const response = await fetch('/api/v1/picture/upload', {
+            const response = await fetch(`${API_BASE_URL}picture/upload`, {
                 method: 'POST',
                 body: formData,
             });
@@ -85,7 +86,7 @@ const ItemFormModal: React.FC<ItemFormModalProps> = ({ onClose, onAddSuccess, bo
         };
 
         try {
-            const response = await fetch('/api/v1/items/create', {
+            const response = await fetch(`${API_BASE_URL}items/create`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(itemData),

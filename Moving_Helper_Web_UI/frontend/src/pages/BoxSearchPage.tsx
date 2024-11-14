@@ -1,4 +1,5 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import { API_BASE_URL } from '../../config';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BoxDetailsDto } from '../dtos/BoxDtos';
 import { useCache } from '../components/CacheContext';
@@ -25,7 +26,7 @@ const BoxSearchPage: React.FC = () => {
     const fetchBoxes = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/v1/boxes/details');
+            const response = await fetch(`${API_BASE_URL}boxes/details`);
             if (!response.ok) throw new Error('Network response was not ok');
             const data: BoxDetailsDto[] = await response.json();
             setBoxes(data);
