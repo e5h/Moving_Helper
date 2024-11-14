@@ -6,3 +6,6 @@
 *.db
 *.db-shm
 *.db-wal
+
+# Mac
+.DS_Store
