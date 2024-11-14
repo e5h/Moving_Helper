@@ -1,14 +1,17 @@
 ﻿// Sidebar.tsx
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../styles/Sidebar.css';
 import { useNavigation } from './NavigationContext';
 
 const Sidebar: React.FC = () => {
     const { lastViewedLocationId, lastViewedBoxId, lastViewedItemId } = useNavigation();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    const handleNavigation = (type: 'location' | 'box' | 'item') => {
+    const isActive = (basePath: string) => location.pathname.startsWith(basePath);
+
+    const handleNavigation = (type: 'location' | 'box' | 'item' | 'settings') => {
         switch (type) {
             case 'location':
                 if (lastViewedLocationId) {
@@ -31,16 +34,33 @@ const Sidebar: React.FC = () => {
                     navigate('/items');
                 }
                 break;
+            case 'settings':
+                navigate('/settings');
+                break;
         }
     };
 
     return (
         <div className="sidebar">
             <nav>
-                <button onClick={() => handleNavigation('location')}>Locations</button>
-                <button onClick={() => handleNavigation('box')}>Boxes</button>
-                <button onClick={() => handleNavigation('item')}>Items</button>
-                <Link to="/settings">Settings</Link>
+                <button className={isActive('/locations') ? 'active' : ''} onClick={() => handleNavigation('location')}>
+                    <span className="material-icons icon">location_on</span>
+                    Locations
+                </button>
+                <button className={isActive('/boxes') ? 'active' : ''} onClick={() => handleNavigation('box')}>
+                    <span className="material-icons icon">inventory_2</span>
+                    Boxes
+                </button>
+                <button className={isActive('/items') ? 'active' : ''} onClick={() => handleNavigation('item')}>
+                    <span className="material-icons icon">view_in_ar</span>
+                    Items
+                </button>
+                <div className="nav-bottom">
+                    <button className={isActive('/settings') ? 'active' : ''} onClick={() => handleNavigation('settings')}>
+                        <span className="material-icons icon">settings</span>
+                        Settings
+                    </button>
+                </div>
             </nav>
         </div>
     );

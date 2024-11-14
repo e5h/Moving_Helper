@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { LocationDetailsDto } from '../dtos/LocationDtos';
-import { BoxInfoDto } from '../dtos/BoxDtos';
+import { BoxDetailsDto } from '../dtos/BoxDtos';
 import { useNavigation } from '../components/NavigationContext';
 import { useCache} from "../components/CacheContext.tsx";
 import BoxFormModal from '../components/BoxFormModal'; // Import the BoxFormModal component
@@ -15,9 +15,13 @@ const LocationDetailsPage: React.FC = () => {
 
     const [location, setLocation] = useState<LocationDetailsDto | null>(null);
     const [picture, setPicture] = useState<string | null>(null);
-    const [boxes, setBoxes] = useState<BoxInfoDto[]>([]);
+    const [boxes, setBoxes] = useState<BoxDetailsDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [showBoxModal, setShowBoxModal] = useState(false); // State for showing the modal
+
+    useEffect(() => {
+        fetchLocationDetails();
+    }, [id]);
 
     const fetchLocationDetails = async () => {
         try {
@@ -35,9 +39,9 @@ const LocationDetailsPage: React.FC = () => {
             setPicture(pictureUrl);
 
             const boxPromises = locationData.boxIds.map((boxId) =>
-                fetch(`/api/v1/boxes/info/${boxId}`).then((response) => response.json())
+                fetch(`/api/v1/boxes/details/${boxId}`).then((response) => response.json())
             );
-            const boxesData: BoxInfoDto[] = await Promise.all(boxPromises);
+            const boxesData: BoxDetailsDto[] = await Promise.all(boxPromises);
             setBoxes(boxesData);
         } catch (error) {
             console.error(error);
@@ -45,10 +49,6 @@ const LocationDetailsPage: React.FC = () => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        fetchLocationDetails();
-    }, [id]);
 
     const handleBoxClick = (boxId: number) => {
         navigate(`/boxes/${boxId}`);
@@ -78,40 +78,62 @@ const LocationDetailsPage: React.FC = () => {
     }
 
     return (
-        <div className="location-details">
-            <h1 className="location-name">{location?.name}</h1>
-            <p className="location-description">{location?.description}</p>
-
-            {picture && <img src={picture} alt={`Location ${location?.id}`} className="location-picture" />}
-
-            <div className="button-group">
-                <button className="back-button" onClick={handleBack}>Back to Locations</button>
-                <button className="add-box-button" onClick={handleAddBox}>Add Box to Location</button>
+        <div className="details-container">
+            <div className="details-header">
+                <button className="back-button" onClick={handleBack}>
+                    <span className="material-icons icon">arrow_back</span>
+                    Back to Locations
+                </button>
+                <h1 className="details-name">{location?.name}</h1>
             </div>
 
-            <h2 className="section-title">Boxes</h2>
-            {boxes.length > 0 ? (
-                <table className="box-table">
-                    <thead>
-                    <tr>
-                        <th>Box Label</th>
-                        <th>Box Description</th>
-                        <th>Box ID</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {boxes.map((box) => (
-                        <tr key={box.id} onClick={() => handleBoxClick(box.id)} style={{ cursor: 'pointer' }}>
-                            <td>{box.label}</td>
-                            <td>{box.description}</td>
-                            <td>{box.id}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p>No boxes available for this location.</p>
-            )}
+            <div className="details-body">
+                <div className="picture-frame">
+                    {picture && <img src={picture} alt={`Location ${location?.id}`} className="details-picture" />}
+                </div>
+                <div className="details-body-info">
+                    <div className="details-metadata">
+                        <p>No metadata.</p>
+                    </div>
+                    <p className="details-description">{location?.description}</p>
+                </div>
+            </div>
+
+            <div className="subcontents-section">
+                <div className="subcontents-header">
+                    <h2 className="subcontents-title">Boxes At Location</h2>
+                    <button className="add-form-button" onClick={handleAddBox}>
+                        <span className="material-icons icon">add_box</span>
+                        Add Box to Location
+                    </button>
+                </div>
+                <div className="subcontents-body">
+                    {boxes.length > 0 ? (
+                        <table className="subcontents-table">
+                            <thead>
+                            <tr>
+                                <th>Box Label</th>
+                                <th>Box Description</th>
+                                <th># Items</th>
+                                <th>Box ID</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {boxes.map((box) => (
+                                <tr key={box.id} onClick={() => handleBoxClick(box.id)} style={{cursor: 'pointer'}}>
+                                    <td>{box.label}</td>
+                                    <td>{box.description}</td>
+                                    <td>{box.itemIds.length}</td>
+                                    <td>{box.id}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>No boxes available for this location.</p>
+                    )}
+                </div>
+            </div>
 
             {/* Render the BoxFormModal when showBoxModal is true */}
             {showBoxModal && (
