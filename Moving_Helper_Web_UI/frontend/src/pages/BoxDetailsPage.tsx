@@ -20,6 +20,9 @@ const BoxDetailsPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [showItemModal, setShowItemModal] = useState(false); // State for modal visibility
 
+    useEffect(() => {
+        fetchBoxDetails();
+    }, [id]);
     const fetchBoxDetails = async () => {
         try {
             const boxResponse = await fetch(`/api/v1/boxes/details/${id}`);
@@ -51,10 +54,6 @@ const BoxDetailsPage: React.FC = () => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        fetchBoxDetails();
-    }, [id]);
 
     const handleLocationClick = () => {
         if (box?.locationId) {
@@ -111,7 +110,7 @@ const BoxDetailsPage: React.FC = () => {
 
             <div className="subcontents-section">
                 <div className="subcontents-header">
-                    <h2 className="subcontents-title">Boxes</h2>
+                    <h2 className="subcontents-title">Items In Box</h2>
                     <button className="add-form-button" onClick={handleAddItem}>
                         <span className="material-icons icon">add_box</span>
                         Add Item To Box

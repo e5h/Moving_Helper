@@ -1,7 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { LocationDetailsDto } from '../dtos/LocationDtos';
-import { BoxInfoDto } from '../dtos/BoxDtos';
+import { BoxDetailsDto } from '../dtos/BoxDtos';
 import { useNavigation } from '../components/NavigationContext';
 import { useCache} from "../components/CacheContext.tsx";
 import BoxFormModal from '../components/BoxFormModal'; // Import the BoxFormModal component
@@ -15,9 +15,13 @@ const LocationDetailsPage: React.FC = () => {
 
     const [location, setLocation] = useState<LocationDetailsDto | null>(null);
     const [picture, setPicture] = useState<string | null>(null);
-    const [boxes, setBoxes] = useState<BoxInfoDto[]>([]);
+    const [boxes, setBoxes] = useState<BoxDetailsDto[]>([]);
     const [loading, setLoading] = useState(true);
     const [showBoxModal, setShowBoxModal] = useState(false); // State for showing the modal
+
+    useEffect(() => {
+        fetchLocationDetails();
+    }, [id]);
 
     const fetchLocationDetails = async () => {
         try {
@@ -35,9 +39,9 @@ const LocationDetailsPage: React.FC = () => {
             setPicture(pictureUrl);
 
             const boxPromises = locationData.boxIds.map((boxId) =>
-                fetch(`/api/v1/boxes/info/${boxId}`).then((response) => response.json())
+                fetch(`/api/v1/boxes/details/${boxId}`).then((response) => response.json())
             );
-            const boxesData: BoxInfoDto[] = await Promise.all(boxPromises);
+            const boxesData: BoxDetailsDto[] = await Promise.all(boxPromises);
             setBoxes(boxesData);
         } catch (error) {
             console.error(error);
@@ -45,10 +49,6 @@ const LocationDetailsPage: React.FC = () => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        fetchLocationDetails();
-    }, [id]);
 
     const handleBoxClick = (boxId: number) => {
         navigate(`/boxes/${boxId}`);
@@ -101,7 +101,7 @@ const LocationDetailsPage: React.FC = () => {
 
             <div className="subcontents-section">
                 <div className="subcontents-header">
-                    <h2 className="subcontents-title">Boxes</h2>
+                    <h2 className="subcontents-title">Boxes At Location</h2>
                     <button className="add-form-button" onClick={handleAddBox}>
                         <span className="material-icons icon">add_box</span>
                         Add Box to Location
@@ -114,6 +114,7 @@ const LocationDetailsPage: React.FC = () => {
                             <tr>
                                 <th>Box Label</th>
                                 <th>Box Description</th>
+                                <th># Items</th>
                                 <th>Box ID</th>
                             </tr>
                             </thead>
@@ -122,6 +123,7 @@ const LocationDetailsPage: React.FC = () => {
                                 <tr key={box.id} onClick={() => handleBoxClick(box.id)} style={{cursor: 'pointer'}}>
                                     <td>{box.label}</td>
                                     <td>{box.description}</td>
+                                    <td>{box.itemIds.length}</td>
                                     <td>{box.id}</td>
                                 </tr>
                             ))}

@@ -9,48 +9,46 @@ const ItemDetailsPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const { setLastViewedItemId } = useNavigation();
-
     const [item, setItem] = useState<ItemDetailsDto | null>(null);
     const [picture, setPicture] = useState<string | null>(null);
-    const [boxLabel, setBoxLabel] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchItemDetails = async () => {
-            try {
-                const itemResponse = await fetch(`/api/v1/items/details/${id}`);
-                if (!itemResponse.ok) throw new Error('Item fetch failed');
-                const itemData: ItemDetailsDto = await itemResponse.json();
-                setItem(itemData);
-                setLastViewedItemId(Number(id));
-
-                if (itemData.pictureId) {
-                    const pictureResponse = await fetch(`/api/v1/picture/download/${itemData.pictureId}`);
-                    if (!pictureResponse.ok) throw new Error('Picture fetch failed');
-                    const pictureBlob = await pictureResponse.blob();
-                    setPicture(URL.createObjectURL(pictureBlob));
-                }
-
-                // Fetch the box label
-                const boxResponse = await fetch(`/api/v1/boxes/info/${itemData.boxId}`);
-                if (!boxResponse.ok) throw new Error('Box fetch failed');
-                const boxData = await boxResponse.json();
-                setBoxLabel(boxData.label);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchItemDetails();
     }, [id, setLastViewedItemId]);
+
+    const fetchItemDetails = async () => {
+        try {
+            const itemResponse = await fetch(`/api/v1/items/details/${id}`);
+            if (!itemResponse.ok) throw new Error('Item fetch failed');
+            const itemData: ItemDetailsDto = await itemResponse.json();
+            setItem(itemData);
+            setLastViewedItemId(Number(id));
+
+            if (itemData.pictureId) {
+                const pictureResponse = await fetch(`/api/v1/picture/download/${itemData.pictureId}`);
+                if (!pictureResponse.ok) throw new Error('Picture fetch failed');
+                const pictureBlob = await pictureResponse.blob();
+                setPicture(URL.createObjectURL(pictureBlob));
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const handleBoxClick = () => {
         if (item?.boxId) {
             navigate(`/boxes/${item.boxId}`);
         }
     };
+
+    const handleLocationClick = () => {
+        if(item?.locationId) {
+            navigate(`/locations/${item?.locationId}`);
+        }
+    }
 
     const handleBack = () => {
         setLastViewedItemId(null);
@@ -78,7 +76,10 @@ const ItemDetailsPage: React.FC = () => {
                 <div className="details-body-info">
                     <div className="details-metadata">
                         <div className="located-at" onClick={handleBoxClick}>
-                            Stored inside: <span>"{boxLabel}"</span>
+                            Stored inside: <span>"{item?.boxLabel}"</span>
+                        </div>
+                        <div className="located-at" onClick={handleLocationClick}>
+                            Located at: <span>"{item?.locationName}"</span>
                         </div>
                     </div>
                     <p className="details-description">{item?.description}</p>
