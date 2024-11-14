@@ -11,6 +11,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({ onClose, onAddSuc
     const [description, setDescription] = useState('');
     const [picture, setPicture] = useState<File | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
+    const [responseStatus, setResponseStatus] = useState<string | null>(null);
 
     // Handle file selection for picture upload
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +58,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({ onClose, onAddSuc
         const locationData = {
             name,
             description,
-            pictureId: pictureId ?? undefined, // Use pictureId if available, otherwise undefined
+            pictureId: pictureId ?? null,
         };
 
         try {
@@ -67,6 +68,7 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({ onClose, onAddSuc
                 body: JSON.stringify(locationData),
             });
 
+            setResponseStatus(`Response: ${response.status} - ${response.statusText}`)
             if (!response.ok) throw new Error('Failed to create location');
 
             onAddSuccess(); // Trigger cache invalidation on successful addition
@@ -93,9 +95,16 @@ const LocationFormModal: React.FC<LocationFormModalProps> = ({ onClose, onAddSuc
                     <input type="file" onChange={handleFileChange} />
                 </label>
                 {uploadSuccess && <p>{uploadSuccess}</p>}
+                {responseStatus && <p>{responseStatus}</p>}
                 <div className="modal-buttons">
-                    <button onClick={handleLocationSubmit}>Add</button>
-                    <button onClick={onClose}>Cancel</button>
+                    <button onClick={onClose}>
+                        <span className="material-icons icon">close</span>
+                        Cancel
+                    </button>
+                    <button onClick={handleLocationSubmit}>
+                        <span className="material-icons icon">check</span>
+                        Confirm
+                    </button>
                 </div>
             </div>
         </div>

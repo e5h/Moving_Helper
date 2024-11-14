@@ -1,3 +1,21 @@
 ﻿/* ItemDetailsPage.css */
 
 @import url('DetailsPage.css');
+
+.located-at {
+    width: 40%;
+    align-self: center;
+    flex-grow: 0;
+    color: #333;
+    background-color: #aaa;
+    border-radius: 5px;
+    padding: 6px 12px;
+    transition: color 0.2s, filter 0.4s;
+}
+
+.located-at:hover {
+    background-color: #aaa;
+    color: #0ff;
+    filter: drop-shadow(0 0 15px #00ffffff);
+    cursor: pointer;
+}

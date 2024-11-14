@@ -3,10 +3,20 @@
 namespace Moving_Helper_Server.SharedLibrary.Features.ItemFeature;
 
 public record ItemCreateDto(
-    [Required] [MaxLength(50)]  string Name,
-    [Required] [MaxLength(512)] string Description,
-    [Required]                  int    BoxId,
-    [Required]                  int?   PictureId
+    [Required]
+    [MaxLength(50)]
+    string Name,
+    
+    [Required]
+    [MaxLength(512)]
+    string Description,
+    
+    [Required]
+    [Range(1, int.MaxValue, ErrorMessage = "Invalid box ID provided.")]
+    int BoxId,
+    
+    [Range(1, int.MaxValue, ErrorMessage = "Invalid picture ID provided.")]
+    int? PictureId
 );
 
 public record ItemInfoDto(
