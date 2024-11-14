@@ -19,30 +19,24 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
     const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
     const [responseStatus, setResponseStatus] = useState<string | null>(null);
     const { locations, setLocations } = useCache();
-    const [loading, setLoading] = useState(true);
 
     // Using the same cache provider on render to allow friendly names for locations
     useEffect(() => {
-        if (locations) {
-            setLoading(false);
-        } else {
-            fetchAllLocations();
-        }
-    }, [locations]);
+        const fetchAllLocations = async () => {
+            try {
+                const response = await fetch('/api/v1/locations/details');
+                if (!response.ok) throw new Error('Failed to fetch locations');
+                const data: LocationDetailsDto[] = await response.json();
+                setLocations(data);
+            } catch (error) {
+                console.error('Error fetching locations:', error);
+            }
+        };
 
-    const fetchAllLocations = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch('/api/v1/locations/details');
-            if (!response.ok) throw new Error('Failed to fetch locations');
-            const data: LocationDetailsDto[] = await response.json();
-            setLocations(data);
-        } catch (error) {
-            console.error('Error fetching locations:', error);
-        } finally {
-            setLoading(false);
+        if (!locations) {
+            fetchAllLocations().then();
         }
-    };
+    }, [locations, setLocations]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files.length > 0) {
@@ -125,7 +119,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
                     <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)}
                               rows={5} maxLength={512}></textarea>
                 </label>
-                {loading ? (
+                {!locations ? (
                     <p>Loading Locations...</p>
                 ) : (
                     <div className="dropdown-labels">
@@ -137,7 +131,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
                                 required
                             >
                                 <option value="">Select</option>
-                                {locations!.map((location) => (
+                                {locations.map((location) => (
                                     <option key={location.id} value={location.id}>
                                         {location.name}
                                     </option>
@@ -152,7 +146,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
                                 required
                             >
                                 <option value="">Select (optional)</option>
-                                {locations!.map((location) => (
+                                {locations.map((location) => (
                                     <option key={location.id} value={location.id}>
                                         {location.name}
                                     </option>
@@ -167,7 +161,7 @@ const BoxFormModal: React.FC<BoxFormModalProps> = ({ onClose, onAddSuccess, loca
                                 required
                             >
                                 <option value="">Select (optional)</option>
-                                {locations!.map((location) => (
+                                {locations.map((location) => (
                                     <option key={location.id} value={location.id}>
                                         {location.name}
                                     </option>

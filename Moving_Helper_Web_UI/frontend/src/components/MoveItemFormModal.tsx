@@ -1,34 +1,23 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { useCache } from '../components/CacheContext';
-import '../styles/MoveBoxFormModal.css';
-import {LocationDetailsDto} from "../dtos/LocationDtos.ts";
+import '../styles/MoveItemFormModal.css';
 import {BoxDetailsDto} from "../dtos/BoxDtos.ts";
+import {ItemDetailsDto} from "../dtos/ItemDtos.ts";
 
-interface MoveBoxFormModalProps {
+interface MoveItemFormModalProps {
     onClose: () => void;
     onAddSuccess: () => void;
-    boxId?: number; // Optional prop for pre-filling Location ID
+    itemId?: number; // Optional prop for pre-filling Location ID
 }
 
-const MoveBoxFormModal: React.FC<MoveBoxFormModalProps> = ({ onClose, onAddSuccess, boxId }) => {
-    const { locations, setLocations, boxes, setBoxes } = useCache();
-    const [boxIdInput, setBoxIdInput] = useState<number | ''>(boxId || '');
-    const [newLocationId, setNewLocationId] = useState<number | null>(null);
+const MoveItemFormModal: React.FC<MoveItemFormModalProps> = ({ onClose, onAddSuccess, itemId }) => {
+    const { items, setItems, boxes, setBoxes } = useCache();
+    const [itemIdInput, setItemIdInput] = useState<number | ''>(itemId || '');
+    const [newBoxId, setNewBoxId] = useState<number | null>(null);
     const [responseStatus, setResponseStatus] = useState<string | null>(null);
 
     // Using the same cache provider on render to allow friendly names for locations
     useEffect(() => {
-        const fetchAllLocations = async () => {
-            try {
-                const response = await fetch('/api/v1/locations/details');
-                if (!response.ok) throw new Error('Failed to fetch locations');
-                const data: LocationDetailsDto[] = await response.json();
-                setLocations(data);
-            } catch (error) {
-                console.error('Error fetching locations:', error);
-            }
-        };
-
         const fetchAllBoxes = async () => {
             try {
                 const response = await fetch('/api/v1/boxes/details');
@@ -40,35 +29,46 @@ const MoveBoxFormModal: React.FC<MoveBoxFormModalProps> = ({ onClose, onAddSucce
             }
         };
 
-        if (!locations) {
-            fetchAllLocations().then();
-        }
+        const fetchAllItems = async () => {
+            try {
+                const response = await fetch('/api/v1/items/details');
+                if (!response.ok) throw new Error('Failed to fetch locations');
+                const data: ItemDetailsDto[] = await response.json();
+                setItems(data);
+            } catch (error) {
+                console.error('Error fetching items:', error);
+            }
+        };
 
         if(!boxes) {
             fetchAllBoxes().then();
         }
-    }, [locations, setLocations, boxes, setBoxes]);
 
-    const handleBoxSubmit = async () => {
-        const boxData = {
-            boxId: boxIdInput,
-            newLocationId,
+        if (!items) {
+            fetchAllItems().then();
+        }
+    }, [items, setItems, boxes, setBoxes]);
+
+    const handleItemSubmit = async () => {
+        const itemData = {
+            itemId: itemIdInput,
+            newBoxId,
         }
 
         try{
-            const response = await fetch('/api/v1/boxes/move', {
+            const response = await fetch('/api/v1/items/move', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(boxData),
+                body: JSON.stringify(itemData),
             });
 
             setResponseStatus(`Response: ${response.status} - ${response.statusText}`)
-            if (!response.ok) throw new Error('Failed to move box');
+            if (!response.ok) throw new Error('Failed to move item');
 
             onAddSuccess();
             onClose();
         } catch (error) {
-            console.error('Error moving box:', error);
+            console.error('Error moving item:', error);
         }
     }
 
@@ -76,34 +76,34 @@ const MoveBoxFormModal: React.FC<MoveBoxFormModalProps> = ({ onClose, onAddSucce
         <div className="modal-overlay">
             <div className="modal-content">
                 <h2>Move Box</h2>
-                {(boxes && locations) ? (
+                {(items && boxes) ? (
                     <div className="dropdown-labels">
                         <label>
-                            Box:
+                            Item:
                             <select
-                                value={boxIdInput || ''}
-                                onChange={(e) => setBoxIdInput(Number(e.target.value))}
+                                value={itemIdInput || ''}
+                                onChange={(e) => setItemIdInput(Number(e.target.value))}
                                 required
                             >
                                 <option value="">Select</option>
-                                {boxes!.map((box) => (
-                                    <option key={box.id} value={box.id}>
-                                        {box.label}
+                                {items.map((item) => (
+                                    <option key={item.id} value={item.id}>
+                                        {item.name}
                                     </option>
                                 ))}
                             </select>
                         </label>
                         <label>
-                            New Location:
+                            New Box:
                             <select
-                                value={newLocationId || ''}
-                                onChange={(e) => setNewLocationId(Number(e.target.value))}
+                                value={newBoxId || ''}
+                                onChange={(e) => setNewBoxId(Number(e.target.value))}
                                 required
                             >
                                 <option value="">Select</option>
-                                {locations!.map((location) => (
-                                    <option key={location.id} value={location.id}>
-                                        {location.name}
+                                {boxes.map((box) => (
+                                    <option key={box.id} value={box.id}>
+                                        {box.label}
                                     </option>
                                 ))}
                             </select>
@@ -118,7 +118,7 @@ const MoveBoxFormModal: React.FC<MoveBoxFormModalProps> = ({ onClose, onAddSucce
                         <span className="material-icons icon">close</span>
                         Cancel
                     </button>
-                    <button onClick={handleBoxSubmit}>
+                    <button onClick={handleItemSubmit}>
                         <span className="material-icons icon">check</span>
                         Confirm
                     </button>
@@ -128,4 +128,4 @@ const MoveBoxFormModal: React.FC<MoveBoxFormModalProps> = ({ onClose, onAddSucce
     );
 };
 
-export default MoveBoxFormModal;
+export default MoveItemFormModal;
