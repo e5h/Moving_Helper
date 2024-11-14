@@ -1,150 +1,21 @@
 ﻿/* BoxDetailsPage.css */
 
-/* Main container styling */
-.box-details {
-    width: 80%;
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-}
+@import url('DetailsPage.css');
 
-/* Box name as main header */
-.box-name {
-    font-size: 2.5rem;
+.located-at {
+    width: 40%;
+    align-self: center;
+    flex-grow: 0;
     color: #333;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-/* Description styling below the name */
-.box-description {
-    font-size: 1.2rem;
-    color: #555;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-/* Center the image */
-.box-picture {
-    display: block;
-    max-width: 400px;
-    max-height: 200px;
-    height: auto;
-    margin: 20px auto;
-    border-radius: 8px;
-}
-
-/* Section title for Items */
-.section-title {
-    font-size: 1.5rem;
-    color: #444;
-    margin-top: 30px;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-/* Items table styling */
-.item-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.item-table th,
-.item-table td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #ddd;
-    color: #333;
-}
-
-/* Narrow column for Item ID */
-.item-table th:nth-child(3),
-.item-table td:nth-child(3) {
-    width: 10%;
-    text-align: center;
-}
-
-/* Wider column for Item Description */
-.item-table th:nth-child(2),
-.item-table td:nth-child(2) {
-    width: 60%;
-}
-
-/* Header background color */
-.item-table th {
-    background-color: #f2f2f2;
-    color: #333;
-}
-
-/* Hover effect for table rows */
-.item-table tr:hover {
-    background-color: #28a745;
-    color: #fff;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-/* Button group styling */
-.button-group {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-/* Back button styling */
-.back-button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
+    background-color: #aaa;
     border-radius: 5px;
+    padding: 6px 12px;
+    transition: color 0.2s, filter 0.4s;
+}
+
+.located-at:hover {
+    background-color: #aaa;
+    color: #0ff;
+    filter: drop-shadow(0 0 15px #00ffffff);
     cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
 }
-
-.back-button:hover {
-    background-color: #0056b3;
-}
-
-/* Add item button styling */
-.add-item-button {
-    padding: 10px 15px;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #28a745;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
-}
-
-.add-item-button:hover {
-    background-color: #218838;
-}
-
-/* Common styles for the location or container box */
-.location-box {
-    margin: 15px auto;
-    padding: 10px;
-    background-color: #f2f2f2;
-    color: #007bff;
-    text-align: center;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 5px;
-    max-width: 300px;
-    transition: background-color 0.3s;
-}
-
-.location-box:hover {
-    background-color: #e0e0e0;
-}
-

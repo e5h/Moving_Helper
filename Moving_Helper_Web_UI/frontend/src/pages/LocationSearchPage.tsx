@@ -75,21 +75,31 @@ const LocationSearchPage: React.FC = () => {
     }
 
     return (
-        <div className="location-search">
+        <div className="search-container">
             <h1>Location Search</h1>
 
-            <div className="filter-section">
-                <label htmlFor="filterInput">Filter:</label>
-                <input
-                    id="filterInput"
-                    type="text"
-                    value={filter}
-                    onChange={handleFilterChange}
-                />
-                <button onClick={handleClearFilter}>Clear</button>
-            </div>
+            <div className="search-options">
+                <div className="filter">
+                    <label htmlFor="filterInput">Filter:</label>
+                    <input
+                        id="filterInput"
+                        type="text"
+                        value={filter}
+                        onChange={handleFilterChange}
+                    />
+                    <button id="clearFilterButton" onClick={handleClearFilter}>
+                        <span className="material-icons icon">disabled_by_default</span>
+                        Clear
+                    </button>
+                </div>
 
-            <button className="add-location-button" onClick={() => setShowLocationModal(true)}>Add Location</button>
+                <div className="option-buttons">
+                    <button className="add-form-button" onClick={() => setShowLocationModal(true)}>
+                        <span className="material-icons icon">add_box</span>
+                        Add Location
+                    </button>
+                </div>
+            </div>
 
             {showLocationModal && (
                 <LocationFormModal
@@ -101,7 +111,7 @@ const LocationSearchPage: React.FC = () => {
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <table className="location-table">
+                <table className="search-table">
                     <thead>
                     <tr>
                         <th>ID</th>

@@ -62,18 +62,27 @@ const ItemDetailsPage: React.FC = () => {
     }
 
     return (
-        <div className="item-details">
-            <div className="location-box" onClick={handleBoxClick}>
-                Inside box: <span>'{boxLabel}'</span>
+        <div className="details-container">
+            <div className="details-header">
+                <button className="back-button" onClick={handleBack}>
+                    <span className="material-icons icon">arrow_back</span>
+                    Back to Items
+                </button>
+                <h1 className="details-name">{item?.name}</h1>
             </div>
 
-            <h1 className="item-name">{item?.name}</h1>
-            <p className="item-description">{item?.description}</p>
-
-            {picture && <img src={picture} alt={`Item ${item?.id}`} className="item-picture" />}
-
-            <div className="button-group">
-                <button className="back-button" onClick={handleBack}>Back to Items</button>
+            <div className="details-body">
+                <div className="picture-frame">
+                    {picture && <img src={picture} alt={`Item ${item?.id}`} className="details-picture"/>}
+                </div>
+                <div className="details-body-info">
+                    <div className="details-metadata">
+                        <div className="located-at" onClick={handleBoxClick}>
+                            Stored inside: <span>"{boxLabel}"</span>
+                        </div>
+                    </div>
+                    <p className="details-description">{item?.description}</p>
+                </div>
             </div>
         </div>
     );

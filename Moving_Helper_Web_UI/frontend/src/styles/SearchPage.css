@@ -1,0 +1,104 @@
+﻿/* Common for all search pages */
+
+.search-container {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+h1 {
+    font-size: 2rem;
+    text-align: center;
+}
+
+.search-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 40px;
+}
+
+.search-options button{
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    margin: 5px 20px;
+    color: #333;
+    background-color: #aaa;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.2s, filter 0.4s;
+}
+
+.search-options button .icon {
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+
+.search-options button:hover{
+    background-color: #aaa;
+    color: #0ff;
+    filter: drop-shadow(0 0 15px #00ffffff);
+}
+
+/* Filter section styling */
+.search-options .filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+#filterInput {
+    padding: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #333; /* Dark background for input */
+    color: #fff; /* White text inside input */
+}
+
+#clearFilterButton {
+    margin-right: auto;
+}
+
+.add-form-button {
+    margin-right: auto;
+}
+
+/* Table styling */
+.search-table {
+    width: calc(100% - 20px);
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.search-table th,
+.search-table td {
+    padding: 2px 10px;
+    text-align: left;
+    border: 0px solid #ddd;
+    color: #000;
+}
+
+.search-table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.search-table tr:hover {
+    background-color: #0cf;
+    color: #fff;
+    transition: background-color 0.3s, color 0.3s;
+}

@@ -86,44 +86,62 @@ const BoxDetailsPage: React.FC = () => {
     }
 
     return (
-        <div className="box-details">
-            <div className="location-box" onClick={handleLocationClick}>
-                Located at <span>{locationName}</span>
+        <div className="details-container">
+            <div className="details-header">
+                <button className="back-button" onClick={handleBack}>
+                    <span className="material-icons icon">arrow_back</span>
+                    Back to Boxes
+                </button>
+                <h1 className="details-name">{box?.label}</h1>
             </div>
 
-            <h1 className="box-name">{box?.label}</h1>
-            <p className="box-description">{box?.description}</p>
-
-            {picture && <img src={picture} alt={`Box ${box?.id}`} className="box-picture" />}
-
-            <div className="button-group">
-                <button className="back-button" onClick={handleBack}>Back to Boxes</button>
-                <button className="add-item-button" onClick={handleAddItem}>Add Item to Box</button>
+            <div className="details-body">
+                <div className="picture-frame">
+                    {picture && <img src={picture} alt={`Box ${box?.id}`} className="details-picture"/>}
+                </div>
+                <div className="details-body-info">
+                    <div className="details-metadata">
+                        <div className="located-at" onClick={handleLocationClick}>
+                            Located at: <span>"{locationName}"</span>
+                        </div>
+                    </div>
+                    <p className="details-description">{box?.description}</p>
+                </div>
             </div>
 
-            <h2 className="section-title">Items</h2>
-            {items.length > 0 ? (
-                <table className="item-table">
-                    <thead>
-                    <tr>
-                        <th>Item Name</th>
-                        <th>Item Description</th>
-                        <th>Item ID</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {items.map((item) => (
-                        <tr key={item.id} onClick={() => navigate(`/items/${item.id}`)} style={{ cursor: 'pointer' }}>
-                            <td>{item.name}</td>
-                            <td>{item.description}</td>
-                            <td>{item.id}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p>No items available in this box.</p>
-            )}
+            <div className="subcontents-section">
+                <div className="subcontents-header">
+                    <h2 className="subcontents-title">Boxes</h2>
+                    <button className="add-form-button" onClick={handleAddItem}>
+                        <span className="material-icons icon">add_box</span>
+                        Add Item To Box
+                    </button>
+                </div>
+                <div className="subcontents-body">
+                    {items.length > 0 ? (
+                        <table className="subcontents-table">
+                            <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Item Description</th>
+                                <th>Item ID</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {items.map((item) => (
+                                <tr key={item.id} onClick={() => navigate(`/items/${item.id}`)} style={{ cursor: 'pointer' }}>
+                                    <td>{item.name}</td>
+                                    <td>{item.description}</td>
+                                    <td>{item.id}</td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>No items available in this box.</p>
+                    )}
+                </div>
+            </div>
 
             {/* Render the modal */}
             {showItemModal && (
